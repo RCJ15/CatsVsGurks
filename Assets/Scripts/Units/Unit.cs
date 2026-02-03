@@ -54,6 +54,7 @@ public abstract class Unit : MonoBehaviour
         get => speed;
         set => speed = value;
     }
+
     public float Damage
     {
         get => damage;
@@ -71,18 +72,23 @@ public abstract class Unit : MonoBehaviour
         get => range;
         set => range = value;
     }
-
     #endregion
 
     [Header("Stats")]
     [Tooltip("Hitpoints, self explanatory")]
     [SerializeField] private float hp = 100;
-    [Tooltip("All damage this unit takes is subtracted by this number to a minimum of 1")]
+    [Tooltip("All damage this unit takes is subtracted by this number")]
     [SerializeField] private float defense = 0;
 
     [Space]
     [Tooltip("How many tiles per second this unit moves")]
     [SerializeField] private float speed = 1;
+    [Tooltip("How many seconds it takes for this unit to accelerate to max speed")]
+    [SerializeField] private float timeToAccelerate = 0.1f;
+    private float _accelerationRate;
+    [Tooltip("How many seconds it takes for this unit to decelerate to zero speed")]
+    [SerializeField] private float timeToDecelerate = 0.1f;
+    private float _decelerationRate;
 
     [Space]
     [Tooltip("Damage, self explanatory")]
@@ -99,6 +105,9 @@ public abstract class Unit : MonoBehaviour
     protected virtual void Awake()
     {
         _currentHp = hp;
+
+        SetAccelerationRate(ref _accelerationRate, timeToAccelerate);
+        SetAccelerationRate(ref _decelerationRate, timeToDecelerate);
     }
 
     private void Start()
@@ -108,6 +117,28 @@ public abstract class Unit : MonoBehaviour
 
     private void Update()
     {
-        
+
+    }
+
+    private void SetAccelerationRate(ref float value, float timeToAccelerate, float distance = 1)
+    {
+        if (timeToAccelerate <= 0)
+        {
+            value = distance;
+        }
+        else
+        {
+            value = distance / timeToAccelerate;
+        }
+    }
+
+    private float GetAccelerationRate(float velocity, float targetVelocity, float acceleration, float deceleration)
+    {
+        if (Mathf.Abs(targetVelocity) < Mathf.Abs(velocity))
+        {
+            return deceleration == 1 ? 1 : deceleration * Time.deltaTime;
+        }
+
+        return acceleration == 1 ? 1 : acceleration * Time.deltaTime;
     }
 }
