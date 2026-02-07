@@ -10,6 +10,7 @@ EditorBuildSettings:
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 544b3e8d73f85474288cfc801f471b84, type: 2}
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 9c8978d258c57184091d0b080eb990d5, type: 2}
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 5fd701d83ea9d8d43983229209ca5ff9, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 694a4e934a0dbdf4abf8bbea842a1bce, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 06937e369e1c38d49ac28d3414c55289, type: 2}
