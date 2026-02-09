@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 [CustomEditor(typeof(Unit), true)]
 public class UnitEditor : Editor
@@ -27,7 +28,20 @@ public class UnitEditor : Editor
             {
                 continue;
             }
+            
+            if (path == "agent")
+            {
+                prop.objectReferenceValue = _target.GetComponentInChildren<NavMeshAgent>(true);
+                continue;
+            }
 
+            if (path == "rb")
+            {
+                prop.objectReferenceValue = _target.GetComponentInChildren<Rigidbody>(true);
+                continue;
+            }
+
+            /*
             if (path == "components")
             {
                 prop.ClearArray();
@@ -42,6 +56,7 @@ public class UnitEditor : Editor
 
                 continue;
             }
+            */
 
             EditorGUILayout.PropertyField(prop, true);
 
