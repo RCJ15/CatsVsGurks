@@ -96,6 +96,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.T))
         {
             Money += UnityEngine.Random.Range(50, 1000);
@@ -104,5 +105,6 @@ public class Player : MonoBehaviour
         {
             Money -= UnityEngine.Random.Range(50, 1000);
         }
+        */
     }
 }
