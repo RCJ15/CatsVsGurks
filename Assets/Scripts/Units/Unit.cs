@@ -1,65 +1,24 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
-using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(Rigidbody))]
-public abstract class Unit : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public abstract class Unit : Entity
 {
-    private readonly Vector3[] _corners = new Vector3[100];
-    private int _cornersLength;
-    private int _cornerIndex = 0;
+    private static readonly RaycastHit[] _hit = new RaycastHit[2];
 
     public abstract Team Team { get; }
 
-    [SerializeField] private Transform targetTemp;
-    private Vector3 _targetPos;
-    [Space]
+    public static readonly Dictionary<Team, List<Unit>> AllUnits = new();
 
+    private Vector3 _targetPos;
+
+    [Space]
     [SerializeField] private string unitName;
 
     #region Statistics
-    public float MaxHP
-    {
-        get => hp;
-        set
-        {
-            float difference = value - hp;
-            hp = value;
-
-            if (difference > 0)
-            {
-                _currentHp += difference;
-            }
-
-            if (_currentHp > hp)
-            {
-                hp = value;
-            }
-        }
-    }
-
-    public float HP
-    {
-        get => _currentHp;
-        set
-        {
-            if (_currentHp == value)
-            {
-                return;
-            }
-
-            float difference = value - _currentHp;
-
-            _currentHp = value;
-        }
-    }
-
-    public float Defense
-    {
-        get => defense;
-        set => defense = value;
-    }
-
     public float Speed
     {
         get => speed;
@@ -86,19 +45,17 @@ public abstract class Unit : MonoBehaviour
     #endregion
 
     [Header("Stats")]
-    [Tooltip("Hitpoints, self explanatory")]
-    [SerializeField] private float hp = 100;
-    [Tooltip("All damage this unit takes is subtracted by this number")]
-    [SerializeField] private float defense = 0;
-
-    [Space]
     [Tooltip("How many tiles per second this unit moves")]
-    [SerializeField] private float speed = 1;
+    [SerializeField] private float speed = 5;
+    [SerializeField] private float turnSpeed = 2f;
+    private Vector3 _desiredDirection;
+    private Vector3 _currentDirection;
+
     [Tooltip("How many seconds it takes for this unit to accelerate to max speed")]
     [SerializeField] private float timeToAccelerate = 0.1f;
     private float _accelerationRate;
     [Tooltip("How many seconds it takes for this unit to decelerate to zero speed")]
-    [SerializeField] private float timeToDecelerate = 0.1f;
+    [SerializeField] private float timeToDecelerate = 0.05f;
     private float _decelerationRate;
     private float _currentVelocity;
 
@@ -107,35 +64,80 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] private float damage = 25;
     [Tooltip("Seconds of delay between each attack")]
     [SerializeField] private float attackDelay = 0.5f;
-    [Tooltip("How close/far a unit needs to be before it'll attempt to attack")]
+    [Tooltip("How close/far a unit needs to be before this unit will attempt to attack")]
     [SerializeField] private float range = 1;
+    [Tooltip("How close/far a unit needs to be before this unit will give chase")]
+    [SerializeField] private float chaseRange = 10;
 
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private NavMeshAgent agent;
 
-    private float _currentHp;
-    protected NavMeshPath path => agent.path;
-
-    private Coroutine _pathCoroutine;
-
+    private PathfindingManager _manager;
     private GlobalUnitSettings _globalUnitSettings;
 
-    protected virtual void Awake()
-    {
-        _currentHp = hp;
+    private List<Vector3> _path = new();
+    private int _pathCount = 1;
+    private int _pathIndex = 0;
 
-        agent.updatePosition = false;
-        agent.updateRotation = false;
-        agent.isStopped = true;
+    private CancellationTokenSource _token = new();
+
+    private bool _pathfinding;
+    private bool _updatePath;
+    private int _forcePathUpdateIndex;
+
+    private bool _hasTargetLineOfSight;
+    private float _distFromTarget;
+
+    private int _findBetterPointFrame;
+    private Vector3? _betterPoint = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
 
         UpdateAccelerationRates();
 
-        _corners[0] = rb.position;
+        _path.Add(rb.position);
+        _currentDirection = transform.forward;
     }
 
     protected virtual void Start()
     {
+        _manager = PathfindingManager.Instance;
         _globalUnitSettings = GlobalUnitSettings.Instance;
+
+        BeginInvokeRepeating();
+    }
+
+    protected virtual void OnEnable()
+    {
+        if (AllUnits.TryGetValue(Team, out var list))
+        {
+            list.Add(this);
+        }
+        else
+        {
+            AllUnits[Team] = new List<Unit>() { this };
+        }
+
+        if (_globalUnitSettings != null)
+        {
+            BeginInvokeRepeating();
+        }
+    }
+
+    private void BeginInvokeRepeating()
+    {
+        InvokeRepeating(nameof(UpdatePathfinding), _globalUnitSettings.PathfindUpdateTimer, _globalUnitSettings.PathfindUpdateTimer);
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (AllUnits.TryGetValue(Team, out var list))
+        {
+            list.Remove(this);
+        }
+
+        CancelInvoke(nameof(UpdatePathfinding));
     }
 
     private void UpdateAccelerationRates()
@@ -151,125 +153,220 @@ public abstract class Unit : MonoBehaviour
     }
 #endif
 
+    private void OnDestroy()
+    {
+        _token.Cancel();
+
+        _token.Dispose();
+    }
+
     protected virtual void Update()
     {
-        // TEMPORARY METHOD OF TARGET POSITION
-        if (targetTemp.position != _targetPos)
+        Vector3 targetPos = DetermineTarget();
+
+        if (targetPos != _targetPos)
         {
-            _targetPos = targetTemp.position;
-            agent.Warp(rb.position);
-
-            Debug.Log("Set destination");
-
-            Vector3 target = _targetPos;
-
-            if (NavMesh.SamplePosition(_targetPos, out NavMeshHit hit, _globalUnitSettings.SampleSearchDistance, NavMesh.AllAreas))
-            {
-                target = hit.position;
-            }
-
-            agent.SetDestination(target);
-
-            if (_pathCoroutine != null)
-            {
-                StopCoroutine(_pathCoroutine);
-            }
-
-            _pathCoroutine = StartCoroutine(AwaitPath());
-
-            agent.isStopped = true;
+            _targetPos = targetPos;
+            _updatePath = true;
         }
 
-        DrawPath();
-
-        /*
-        if (targetTemp.position != _targetPos)
-        {
-            _targetPos = targetTemp.position;
-
-            if (NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, _path))
-            {
-                _cornerIndex = 0;
-
-                _cornersLength = _path.GetCornersNonAlloc(_corners);
-            }
-        }
-
-        if (_path.status == NavMeshPathStatus.PathInvalid)
-        {
-            return;
-        }
-
-        if (_cornerIndex >= _cornersLength)
-        {
-            return;
-        }
-
-        Vector3 target = _corners[_cornerIndex];
-
-        transform.position = Vector3.MoveTowards(transform.position, target, Speed * Time.deltaTime);
-
-        float sqrDist = (transform.position - target).sqrMagnitude;
-
-        if (sqrDist <= _globalUnitSettings.CornerDistSqr)
-        {
-            _cornerIndex++;
-        }
-        */
+        _hasTargetLineOfSight = HasLineOfSight(_targetPos, out _distFromTarget);
     }
 
-    private void DrawPath()
+    public bool HasLineOfSight(Vector3 pos) => HasLineOfSight(pos, out _);
+    public bool HasLineOfSight(Vector3 pos, out float dist) => HasLineOfSight(pos, 1, out dist);
+    public bool HasLineOfSight(Vector3 pos, float widthMultiplier, out float dist, LayerMask? layerOverride = null)
     {
-        Vector3 previousCorner = _corners[0];
+        Vector3 thisPos = transform.position;
+        Vector3 direction = pos - thisPos;
+        direction.y = 0;
+        direction.Normalize();
 
-        for (int i = 1; i < _cornersLength; i++)
+        dist = Vector2.Distance(new Vector2(pos.x, pos.z), new Vector2(thisPos.x, thisPos.z));
+        Vector3 perpendicular = Vector3.Cross(direction, Vector3.up);
+
+        for (int i = -_globalUnitSettings.LineOfSightRaysPerSide; i <= _globalUnitSettings.LineOfSightRaysPerSide; i++)
         {
-            Vector3 corner = _corners[i];
+            float t = (float)i / (float)_globalUnitSettings.LineOfSightRaysPerSide;
 
-            Debug.DrawLine(VisualsPlane.TransformPoint(previousCorner), VisualsPlane.TransformPoint(corner), Color.green);
+            Ray ray = new Ray(transform.position + perpendicular * (t * _globalUnitSettings.LineOfSightRayWidth * widthMultiplier), direction);
 
-            previousCorner = corner;
+            int count = Physics.RaycastNonAlloc(ray, _hit, dist, layerOverride.HasValue ? layerOverride.Value : _globalUnitSettings.LineOfSightLayer);
+
+            for (int j = 0; j < count; j++)
+            {
+                if (_hit[j].rigidbody != rb)
+                {
+                    return false;
+                }
+            }
         }
+
+        return true;
     }
 
-    private IEnumerator AwaitPath()
+    private void UpdatePathfinding()
     {
-        yield return new WaitUntil(() => !agent.pathPending);
+        bool forced = _forcePathUpdateIndex >= _globalUnitSettings.ForcePathUpdateIndex;
 
-        if (path.status == NavMeshPathStatus.PathInvalid)
+        if (((!_hasTargetLineOfSight && _updatePath) || forced) && !_pathfinding)
         {
-            _cornerIndex = 0;
-            _cornersLength = 0;
+            Pathfind(_token.Token);
+            _updatePath = false;
+
+            if (forced)
+            {
+                _forcePathUpdateIndex = 0;
+            }
         }
 
-        _cornerIndex = 0;
-        _cornersLength = path.GetCornersNonAlloc(_corners);
+        _forcePathUpdateIndex++;
+    }
 
-        Debug.Log("Got path");
+    protected abstract Vector3 DetermineTarget();
+
+    protected virtual void LateUpdate()
+    {
+        _currentDirection = Vector3.Slerp(_currentDirection, _desiredDirection, turnSpeed * Time.deltaTime);
+        _currentDirection.Normalize();
+
+        transform.forward = _currentDirection;
+    }
+
+    private async void Pathfind(CancellationToken token)
+    {
+        _pathfinding = true;
+
+        try
+        {
+            var result = await _manager.FindPath(transform.position, _targetPos, token);
+
+            if (result != null)
+            {
+                await Awaitable.MainThreadAsync();
+
+                _path = result;
+                _path.RemoveAt(0);
+                _pathIndex = 0;
+                _pathCount = Mathf.Max(_path.Count - 1, 0);
+                _betterPoint = null;
+                _findBetterPointFrame = 0;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+
+        }
+
+        _pathfinding = false;
     }
 
     protected virtual void FixedUpdate()
     {
-        float targetVelocity = _cornerIndex >= _cornersLength ? 0 : speed;
+        float targetVelocity;
+
+        Vector3 moveTo;
+
+        if (_hasTargetLineOfSight)
+        {
+            moveTo = _targetPos;
+        }
+        else
+        {
+            int index = _pathIndex;
+
+            // Find better path (should prevent going in circles)
+            if (_findBetterPointFrame <= 0 && _pathIndex < _pathCount)
+            {
+                _findBetterPointFrame = _globalUnitSettings.FindBetterPointFrameCount;
+
+                bool foundBetterPath = false;
+
+                for (int i = _pathIndex + 1; i < _pathCount; i++)
+                {
+                    Vector3 pos = _path[i];
+
+                    if (HasLineOfSight(pos, 0.75f, out _, _globalUnitSettings.ObstacleLayer))
+                    {
+                        foundBetterPath = true;
+                        index = i;
+                    }
+                }
+
+                if (foundBetterPath)
+                {
+                    _pathIndex = index;
+                }
+                else if (_pathIndex < _pathCount - 1)
+                {
+                    Vector3 p1 = _path[_pathIndex];
+                    Vector3 p2 = _path[_pathIndex + 1];
+
+                    float nextPointDist = Vector2.Distance(new Vector2(p1.x, p1.z), new Vector2(p2.x, p2.z));
+
+                    int points = Mathf.RoundToInt(nextPointDist);
+
+                    for (int i = 0; i < points; i++)
+                    {
+                        float t = (float)i / (float)points;
+
+                        Vector3 point = Vector3.Lerp(p1, p2, t);
+
+                        if (HasLineOfSight(point, 0.75f, out _, _globalUnitSettings.ObstacleLayer))
+                        {
+                            _betterPoint = point;
+                        }
+                    }
+                }
+            }
+
+            _findBetterPointFrame--;
+
+            if (_betterPoint.HasValue)
+            {
+                moveTo = _betterPoint.Value;
+            }
+            else if (_pathCount > 0)
+            {
+                moveTo = _path[Mathf.Min(index, _pathCount - 1)];
+            }
+            else
+            {
+                moveTo = rb.position;
+            }
+        }
+
+        float sqrDist = (rb.position - moveTo).sqrMagnitude;
+
+        if (_hasTargetLineOfSight)
+        {
+            targetVelocity = sqrDist <= _globalUnitSettings.DestinationDistSqr ? 0 : speed;
+        }
+        else
+        {
+            targetVelocity = _pathIndex >= _pathCount ? 0 : speed;
+
+            if (sqrDist <= _globalUnitSettings.DestinationDistSqr)
+            {
+                _pathIndex++;
+                _betterPoint = null;
+                _findBetterPointFrame = 0;
+            }
+        }
 
         float acceleration = GetAccelerationRate(_currentVelocity, targetVelocity, _accelerationRate, _decelerationRate);
         _currentVelocity = Mathf.MoveTowards(_currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
 
-        Vector3 targetPos = _corners[Mathf.Min(_cornerIndex, _cornersLength)];
+        _desiredDirection = moveTo - rb.position;
+        _desiredDirection.y = 0;
+        _desiredDirection.Normalize();
 
-        rb.linearVelocity = (targetPos - rb.position).normalized * _currentVelocity;
+        Vector3 velocity = rb.linearVelocity;
 
-        float sqrDist = (rb.position - targetPos).sqrMagnitude;
+        velocity.x = _currentDirection.x * _currentVelocity;
+        velocity.z = _currentDirection.z * _currentVelocity;
 
-        if (sqrDist <= _globalUnitSettings.DestinationDistSqr)
-        {
-            _cornerIndex++;
-        }
-    }
-
-    public virtual void Hurt(float damage)
-    {
-        HP -= Mathf.Max(damage - defense, 1);
+        rb.linearVelocity = velocity;
     }
 
     private void SetAccelerationRate(ref float value, float timeToAccelerate, float distance = 1)
@@ -297,9 +394,36 @@ public abstract class Unit : MonoBehaviour
         return acceleration == 1 ? 1 : acceleration * Time.deltaTime;
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        Matrix4x4 startMatrix = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, Quaternion.identity, new Vector3(1, 0, 1));
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(Vector3.zero, range);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Vector3.zero, chaseRange);
+
+        Gizmos.matrix = startMatrix;
+    }
+
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_corners[_cornerIndex], 0.1f);
+        Gizmos.color = Color.blue;
+
+        Vector3? previousPos = null;
+
+        foreach (Vector3 point in _path)
+        {
+            if (previousPos.HasValue)
+            {
+                Gizmos.DrawLine(VisualsPlane.TransformPoint(previousPos.Value), VisualsPlane.TransformPoint(point));
+            }
+
+            previousPos = point;
+        }
     }
+#endif
 }

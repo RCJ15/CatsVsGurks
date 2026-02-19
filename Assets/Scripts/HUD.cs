@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.PlayerLoop;
+using System;
 
 public class HUD : MonoBehaviour
 {
@@ -20,10 +21,12 @@ public class HUD : MonoBehaviour
     [SerializeField] private Ease moneyEase;
 
     [SerializeField] private TMP_Text waveText;
+    private string _waveFormat;
 
     [Header("Health")]
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
+    private string _healthFormat;
 
     [Space]
     [SerializeField] private Slider bosshealthSlider;
@@ -54,6 +57,16 @@ public class HUD : MonoBehaviour
         UpdateMoneyText();
 
         Player.OnChangeMoney += OnChangeMoney;
+
+        _waveFormat = waveText.text;
+        UpdateWaveText();
+        Player.OnChangeWave += OnChangeWave;
+
+        _healthFormat = healthText.text;
+        UpdateHP();
+
+        Player.OnChangeHP += OnChangeHP;
+        Player.OnChangeMaxHP += OnChangeMaxHP;
     }
 
     private void Update()
@@ -106,5 +119,33 @@ public class HUD : MonoBehaviour
             moneyText.fontSize = _moneyTextStartFontSize * moneyTweenSize;
             DOTween.To(() => moneyText.fontSize, (v) => moneyText.fontSize = v, _moneyTextStartFontSize, moneyTweenDuration).SetEase(moneyEase).SetTarget(moneyText);
         }
+    }
+
+    private void UpdateWaveText()
+    {
+        waveText.text = string.Format(_waveFormat, Player.Wave);
+    }
+
+    private void OnChangeWave(int oldWave, int newWave)
+    {
+        UpdateWaveText();
+    }
+
+    private void UpdateHP()
+    {
+        healthSlider.maxValue = Player.MaxHP;
+        healthSlider.value = Player.HP;
+
+        healthText.text = string.Format(_healthFormat, Mathf.Ceil(Player.HP), Mathf.Ceil(Player.MaxHP));
+    }
+
+    private void OnChangeMaxHP(float oldHP, float newHP)
+    {
+        UpdateHP();
+    }
+
+    private void OnChangeHP(float oldHealth, float newHealth)
+    {
+        UpdateHP();
     }
 }

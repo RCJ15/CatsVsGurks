@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -31,23 +34,28 @@ public class PathfindingManager : MonoBehaviour
         new(-1, -1),
     };
 
+    public float TileSize => tileSize;
+    public float TileCollisionSize => tileSize * tileCollisionSize;
+    public LayerMask ObstacleLayer => obstacleLayer;
+
     [SerializeField] private float tileSize = 1f;
     [SerializeField] private float tileCollisionSize = 1f;
+    [SerializeField] private LayerMask obstacleLayer;
+
+    [Space]
     [SerializeField] private int gridSize = 100;
     [SerializeField] private Vector2 gridOffset;
+    private Vector3 _gridOrigin;
+    private Vector2 _gridOrigin2D;
 
     private Tile[,] _tiles;
-    private Vector3 _gridOrigin;
 
     private List<Tile> _path;
 
     private void Awake()
     {
         Instance = this;
-    }
 
-    private void Start()
-    {
         UpdateGridOrigin();
 
         // Create tiles
@@ -81,7 +89,7 @@ public class PathfindingManager : MonoBehaviour
                     downNeighbor.Neighbors[UP] = tile;
                 }
 
-                /*
+                /* 8 way movement (not needed)
                 if (xOver && yOver)
                 {
                     Tile neighbor = GetTile(pos + Directions[DOWN_LEFT]);
@@ -92,33 +100,43 @@ public class PathfindingManager : MonoBehaviour
                     downNeighbor.Neighbors[UP_LEFT] = leftNeighbor;
                 }
                 */
+
+                // 2D
+                Vector2 worldPos2D = GridToWorld2D(pos);
+                Vector2 halfSize2D = Vector2.one * tileSize / 2f;
+
+                tile.WorldPoint2D = worldPos2D;
+
+                tile.WorldPoints2D[0] = worldPos2D - halfSize2D;
+                tile.WorldPoints2D[1] = worldPos2D + halfSize2D;
+                tile.WorldPoints2D[2] = worldPos2D + new Vector2(-halfSize2D.x, halfSize2D.y);
+                tile.WorldPoints2D[3] = worldPos2D + new Vector2(halfSize2D.x, -halfSize2D.y);
+
+                Vector2 halfCollisionSize2D = Vector2.one * tileSize * tileCollisionSize / 2f;
+
+                tile.WorldCollisionPoints2D[0] = worldPos2D - halfCollisionSize2D;
+                tile.WorldCollisionPoints2D[1] = worldPos2D + halfCollisionSize2D;
+                tile.WorldCollisionPoints2D[2] = worldPos2D + new Vector2(-halfCollisionSize2D.x, halfCollisionSize2D.y);
+                tile.WorldCollisionPoints2D[3] = worldPos2D + new Vector2(halfCollisionSize2D.x, -halfCollisionSize2D.y);
+
+                // 3D
+                Vector3 worldPos = GridToWorld(pos);
+                Vector3 halfSize = new(halfSize2D.x, 0, halfSize2D.y);
+
+                tile.WorldPoint = worldPos;
+
+                tile.WorldPoints[0] = worldPos - halfSize;
+                tile.WorldPoints[1] = worldPos + halfSize;
+                tile.WorldPoints[2] = worldPos + new Vector3(-halfSize.x, 0, halfSize.y);
+                tile.WorldPoints[3] = worldPos + new Vector3(halfSize.x, 0, -halfSize.y);
+
+                Vector3 halfCollisionSize = new(halfCollisionSize2D.x, 0, halfCollisionSize2D.y);
+
+                tile.WorldCollisionPoints[0] = worldPos - halfCollisionSize;
+                tile.WorldCollisionPoints[1] = worldPos + halfCollisionSize;
+                tile.WorldCollisionPoints[2] = worldPos + new Vector3(-halfCollisionSize.x, 0, halfCollisionSize.y);
+                tile.WorldCollisionPoints[3] = worldPos + new Vector3(halfCollisionSize.x, 0, -halfCollisionSize.y);
             }
-        }
-
-        GetTile(0, 0).BlockCount++;
-        GetTile(1, 0).BlockCount++;
-        GetTile(2, 0).BlockCount++;
-        GetTile(3, 0).BlockCount++;
-
-        GetTile(3, 3).BlockCount++;
-        GetTile(3, 4).BlockCount++;
-        GetTile(3, 5).BlockCount++;
-        GetTile(3, 6).BlockCount++;
-
-        GetTile(4, 3).BlockCount++;
-
-        GetTile(4, 4).BlockCount++;
-        GetTile(5, 4).BlockCount++;
-        GetTile(6, 4).BlockCount++;
-        GetTile(7, 4).BlockCount++;
-        GetTile(8, 4).BlockCount++;
-        GetTile(9, 4).BlockCount++;
-
-        _path = FindPath(GetTile(9, 9), GetTile(9, 0));
-
-        for (int i = 1; i < _path.Count; i++)
-        {
-
         }
     }
 
@@ -131,31 +149,44 @@ public class PathfindingManager : MonoBehaviour
 
     private void UpdateGridOrigin()
     {
-        _gridOrigin = new Vector3(-1, 0, -1) * (gridSize / 2) * tileSize;
-        _gridOrigin.x += gridOffset.x;
-        _gridOrigin.z += gridOffset.y;
+        _gridOrigin2D = new Vector2(-1, -1) * (gridSize / 2) * tileSize;
+        _gridOrigin2D.x += gridOffset.x;
+        _gridOrigin2D.y += gridOffset.y;
+
+        _gridOrigin = new Vector3(_gridOrigin2D.x, 0, _gridOrigin2D.y);
     }
 
-    private void Update()
+    public async Task<List<Vector3>> FindPath(Vector3 start, Vector3 end, CancellationToken cancellationToken)
     {
-        
-    }
+        await Awaitable.BackgroundThreadAsync();
 
-    public List<Tile> FindPath(Tile start, Tile end)
-    {
         Dictionary<Tile, TileScores> scores = new();
 
-        List<Tile> open = new() { start };
+        Tile startTile = GetTile(WorldToGrid(start));
+        Tile endTile = GetTile(WorldToGrid(end));
+
+        // Impossible path, TODO: Aproximate path if end is blocked
+        if (startTile == null || endTile == null || endTile.Blocked)
+        {
+            return null;
+        }
+
+        List<Tile> open = new() { startTile };
         int count = 1;
 
-        scores.Add(start, new(start, 0, Distance(start, end)));
+        scores.Add(startTile, new(startTile, 0, Distance(startTile, endTile)));
 
-        HashSet<Tile> closed = new();
+        HashSet<Vector2Int> closed = new();
 
         Dictionary<Vector2Int, Tile> parentMap = new();
 
         while (count > 0)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
+
             // Get the tile with the lowest F cost
             Tile current = null;
             int index = -1;
@@ -174,19 +205,26 @@ public class PathfindingManager : MonoBehaviour
                 }
             }
 
-            if (current == end)
+            if (current == endTile)
             {
-                return ConstructPath(parentMap, current);
+                return await ConstructPath(parentMap, current, cancellationToken);
             }
 
             open.RemoveAt(index);
             count--;
 
-            closed.Add(current);
+            closed.Add(current.Pos);
 
-            foreach (Tile neighbor in current.Neighbors)
+            for (int i = 0; i < 4; i++)
             {
-                if (neighbor == null || closed.Contains(neighbor) || neighbor.Blocked) continue;
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                Tile neighbor = current.Neighbors[i];
+
+                if (neighbor == null || closed.Contains(neighbor.Pos) || neighbor.Blocked) continue;
 
                 float tentativeG = currentScores.G + 1;
 
@@ -197,7 +235,7 @@ public class PathfindingManager : MonoBehaviour
 
                 score.Tile = neighbor;
                 score.G = tentativeG;
-                score.H = Distance(neighbor, end);
+                score.H = Distance(neighbor, endTile);
 
                 scores[neighbor] = score;
 
@@ -216,25 +254,98 @@ public class PathfindingManager : MonoBehaviour
         return null;
     }
 
-    private List<Tile> ConstructPath(Dictionary<Vector2Int, Tile> parentMap, Tile current)
+    private async Task<List<Vector3>> ConstructPath(Dictionary<Vector2Int, Tile> parentMap, Tile current, CancellationToken cancellationToken)
     {
-        var path = new List<Tile> { current };
+        await Awaitable.BackgroundThreadAsync();
+
+        var tiles = new List<Tile> { current };
 
         while (parentMap.ContainsKey(current.Pos))
         {
-            Vector3 pos1 = GridToWorld(current.Pos);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
 
             current = parentMap[current.Pos];
 
-            Vector3 pos2 = GridToWorld(current.Pos);
-            Debug.DrawLine(pos1, pos2, Color.black, 999);
-
-            path.Add(current);
+            tiles.Add(current);
         }
 
-        path.Reverse();
+        tiles.Reverse();
 
-        
+        // Optimize path
+        List<Vector3> path = new()
+        {
+            tiles[0].WorldPoint
+        };
+
+        //QueryParameters parameters = new(obstacleLayer);
+
+        int count = tiles.Count;
+        for (int i = 0; i < count; i++)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
+
+            Tile tile = tiles[i];
+
+            // Shoot rays that will detect blocked tiles
+            int e = 0;
+            int lastIndex = 0;
+
+            for (int j = i + 1; j < count; j++)
+            {
+                Tile nextTile = tiles[j];
+
+                Vector2Int tilePos = tile.Pos;
+                Vector2Int nextTilePos = nextTile.Pos;
+
+                Vector2Int min = new(Mathf.Min(tilePos.x, nextTilePos.x), Mathf.Min(tilePos.y, nextTilePos.y));
+                Vector2Int max = new(Mathf.Max(tilePos.x, nextTilePos.x), Mathf.Max(tilePos.y, nextTilePos.y));
+
+                Vector2 from = tile.WorldPoint2D;
+                Vector2 to = nextTile.WorldPoint2D;
+
+                bool hit = false;
+                for (int x = min.x; x <= max.x; x++)
+                {
+                    for (int y = min.y; y <= max.y; y++)
+                    {
+                        Tile lineTile = GetTile(x, y);
+
+                        if (!lineTile.Blocked)
+                        {
+                            continue;
+                        }
+
+                        if (PathfindingUtility.LineIntersectsBox(from, to, lineTile.WorldPoint2D, Vector2.one * tileSize * tileCollisionSize))
+                        {
+                            hit = true;
+                            break;
+                        }
+                    }
+
+                    if (hit)
+                    {
+                        break;
+                    }
+                }
+
+                if (!hit)
+                {
+                    lastIndex = e;
+                }
+
+                e++;
+            }
+
+            i += lastIndex;
+
+            path.Add(tiles[i].WorldPoint);
+        }
 
         return path;
     }
@@ -245,26 +356,24 @@ public class PathfindingManager : MonoBehaviour
         public int X => Pos.x;
         public int Y => Pos.y;
 
+        public Vector3 WorldPoint { get; set; }
+        public Vector3[] WorldPoints { get; private set; } = new Vector3[4];
+        public Vector3[] WorldCollisionPoints { get; private set; } = new Vector3[4];
+
+        public Vector2 WorldPoint2D { get; set; }
+        public Vector2[] WorldPoints2D { get; private set; } = new Vector2[4];
+        public Vector2[] WorldCollisionPoints2D { get; private set; } = new Vector2[4];
+
         public float Cost { get; set; }
 
         public bool Blocked => BlockCount > 0;
         public int BlockCount { get; set; } = 0;
 
-        public Tile[] Neighbors { get; private set; } = new Tile[8];
+        public Tile[] Neighbors { get; private set; } = new Tile[4];
 
         public Tile(int x, int y)
         {
             Pos = new(x, y);
-        }
-
-        public void PrintNeighbors()
-        {
-            Debug.Log($"{ToString()} | NEIGHBOR R:{Neighbors[RIGHT]}, D:{Neighbors[DOWN]}, L:{Neighbors[LEFT]}, U:{Neighbors[UP]}");
-        }
-
-        public override string ToString()
-        {
-            return $"TILE(X:{X}, Y:{Y})";
         }
     }
 
@@ -283,12 +392,66 @@ public class PathfindingManager : MonoBehaviour
         }
     }
 
+    #region WorldToGrid (Vector2)
+    public Vector2Int WorldToGrid2D(Vector2 pos)
+    {
+        pos -= _gridOrigin2D;
+        pos /= tileSize;
+
+        return new(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+    }
+
+    public Vector2Int WorldToGridFloor2D(Vector2 pos)
+    {
+        pos -= _gridOrigin2D;
+        pos /= tileSize;
+
+        return new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y));
+    }
+
+    public Vector2Int WorldToGridCeil2D(Vector2 pos)
+    {
+        pos -= _gridOrigin2D;
+        pos /= tileSize;
+
+        return new(Mathf.CeilToInt(pos.x), Mathf.CeilToInt(pos.y));
+    }
+    #endregion
+
+    #region WorldToGrid (Vector3)
     public Vector2Int WorldToGrid(Vector3 pos)
     {
         pos -= _gridOrigin;
         pos /= tileSize;
 
         return new(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.z));
+    }
+
+    public Vector2Int WorldToGridFloor(Vector3 pos)
+    {
+        pos -= _gridOrigin;
+        pos /= tileSize;
+
+        return new(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.z));
+    }
+
+    public Vector2Int WorldToGridCeil(Vector3 pos)
+    {
+        pos -= _gridOrigin;
+        pos /= tileSize;
+
+        return new(Mathf.CeilToInt(pos.x), Mathf.CeilToInt(pos.z));
+    }
+    #endregion
+
+    public Vector3 GridToWorld2D(Vector2Int pos)
+    {
+        return GridToWorld2D(pos.x, pos.y);
+    }
+
+    public Vector2 GridToWorld2D(int x, int y)
+    {
+        return (new Vector2(x, y) * tileSize) + _gridOrigin2D;
     }
 
     public Vector3 GridToWorld(Vector2Int pos)
@@ -302,7 +465,13 @@ public class PathfindingManager : MonoBehaviour
     }
 
     public Tile GetTile(Vector2Int pos) => GetTile(pos.x, pos.y);
-    public Tile GetTile(int x, int y) => _tiles[x, y];
+    public Tile GetTile(int x, int y)
+    {
+        if (x < 0 || y < 0) return null;
+        if (x > gridSize || y > gridSize) return null;
+
+        return _tiles[x, y];
+    }
 
     public static float Distance(Tile t1, Tile t2)
     {
@@ -314,7 +483,7 @@ public class PathfindingManager : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
 
@@ -336,6 +505,15 @@ public class PathfindingManager : MonoBehaviour
                         Gizmos.color = tile.Blocked ? Color.red : Color.green;
 
                         pos.y += tile.Blocked ? 0.05f : 0;
+                    }
+
+                    if (tileCollisionSize > 0 && tileCollisionSize < 1)
+                    {
+                        Color startCol = Gizmos.color;
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawWireCube(pos, size * tileCollisionSize);
+
+                        Gizmos.color = startCol;
                     }
 
                     Gizmos.DrawWireCube(pos, size);

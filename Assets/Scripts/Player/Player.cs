@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
     #region Events
-    public delegate void ChangeValueEvent<T>(T oldHp, T newHp);
+    public delegate void ChangeValueEvent<T>(T oldValue, T newValue);
     public static ChangeValueEvent<float> OnChangeMaxHP { get; set; }
     public static ChangeValueEvent<float> OnChangeHP { get; set; }
     public static ChangeValueEvent<int> OnChangeMoney { get; set; }
@@ -92,17 +93,23 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        _currentHp = hp;
         Instance = this;
     }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Keyboard.current.tKey.wasPressedThisFrame)
         {
             Money += UnityEngine.Random.Range(50, 1000);
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
+        else if (Keyboard.current.yKey.wasPressedThisFrame)
         {
             Money -= UnityEngine.Random.Range(50, 1000);
+        }
+        else if (Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            HP -= UnityEngine.Random.Range(1, 10);
         }
     }
 }

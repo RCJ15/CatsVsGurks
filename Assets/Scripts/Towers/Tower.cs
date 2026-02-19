@@ -1,20 +1,9 @@
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public class Tower : Entity
 {
-    [SerializeField] private float hp;
-    [SerializeField] private float defense;
+    public int Cost => cost;
 
-    [Space]
-    [SerializeField] private Unit unit;
-
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        
-    }
+    [Header("Tower")]
+    [SerializeField] protected int cost;
 }
