@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Meta.XR;
+using System;
 
 public class FollowPointer : MonoBehaviour
 {
@@ -17,8 +18,12 @@ public class FollowPointer : MonoBehaviour
     private LineRenderer innerLineRenderer;
     private Coroutine hideRoutine;
 
+    private GlobalUnitSettings _unitSettings;
+
     void Start()
     {
+        _unitSettings = GlobalUnitSettings.Instance;
+
         // If no material assigned, try to pick a URP-friendly fallback shader.
         // Prefer an editor-created material assigned in the inspector to avoid shader compile issues at build time.
         Material baseMat = GetSafeMaterial();
@@ -82,10 +87,34 @@ public class FollowPointer : MonoBehaviour
         Vector3 position = rightControllerAnchor.position;
         Vector3 forward = rightControllerAnchor.forward;
 
+        position = SimulationPlane.TransformPoint(position);
+        forward = SimulationPlane.TransformDirection(forward);
+
         if (OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {
             Debug.Log("Trigger Pressed");
             ShowRay(position, forward);
+        }
+        else if (OVRInput.GetDown(OVRInput.RawButton.A) || OVRInput.GetDown(OVRInput.RawButton.B))
+        {
+            tempDeleteLaterPls(position, forward);
+        }
+    }
+
+    private void tempDeleteLaterPls(Vector3 origin, Vector3 direction)
+    {
+        if (lineRenderer == null || innerLineRenderer == null)
+            return;
+
+        Ray ray = new Ray(origin, direction);
+        RaycastHit hit;
+        Vector3 endPoint = origin + direction * maxDistance;
+
+        if (Physics.Raycast(ray, out hit, maxDistance, _unitSettings.ObstacleLayer))
+        {
+            endPoint = hit.point;
+
+            FindFirstObjectByType<TowerPlaceButton>().tempPlaceTower(endPoint);
         }
     }
 
@@ -98,11 +127,14 @@ public class FollowPointer : MonoBehaviour
         RaycastHit hit;
         Vector3 endPoint = origin + direction * maxDistance;
             
-        if (Physics.Raycast(ray, out hit, maxDistance))
+        if (Physics.Raycast(ray, out hit, maxDistance, _unitSettings.ObstacleLayer))
         {
             endPoint = hit.point;
+            LaserPointer.Position = endPoint;
+            
             Debug.Log($"Ray hit: {hit.collider.name} at {endPoint}");
 
+            /*
             // Outer line
             lineRenderer.SetPosition(0, origin);
             lineRenderer.SetPosition(1, endPoint);
@@ -122,9 +154,11 @@ public class FollowPointer : MonoBehaviour
                 StopCoroutine(hideRoutine);
 
             hideRoutine = StartCoroutine(HideAfter(showDuration));
+            */
         }
         else
         {
+            /*
             Debug.Log("Raycast did not hit anything");
             if (lineRenderer.enabled)
                 lineRenderer.enabled = false;
@@ -136,6 +170,8 @@ public class FollowPointer : MonoBehaviour
                 StopCoroutine(hideRoutine);
                 hideRoutine = null;
             }
+
+            */
         }
     }
 

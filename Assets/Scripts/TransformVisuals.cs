@@ -6,12 +6,14 @@ public class TransformVisuals : MonoBehaviour
     private Transform _transform;
 
     private Vector3 _offset;
+    private Vector3 _startScale;
 
     private void Start()
     {
         _transform = transform;
         _offset = _transform.localPosition;
         _root = _transform.root;
+        _startScale = _transform.localScale;
     }
 
     private void LateUpdate()
@@ -21,5 +23,6 @@ public class TransformVisuals : MonoBehaviour
 
         _transform.position = VisualsPlane.TransformPoint(_root.position + _offset);
         _transform.rotation = VisualsPlane.TransformRotation(_root.forward, _root.up);
+        _transform.localScale = VisualsPlane.TransformScale(_startScale);
     }
 }

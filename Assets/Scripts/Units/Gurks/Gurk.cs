@@ -9,9 +9,21 @@ public class Gurk : Unit
 
     private PlayerBase _playerBase;
 
+    private Vector3 randPos;
+
     protected override void Awake()
     {
         base.Awake();
+
+        InvokeRepeating(nameof(SetRandPos), 0f, 5f);
+    }
+
+    private void SetRandPos()
+    {
+        randPos = Random.insideUnitCircle * 45f;
+
+        randPos.y = 0;
+        randPos.z = randPos.y;
     }
 
     protected override void Start()
@@ -23,6 +35,7 @@ public class Gurk : Unit
 
     protected override Vector3 DetermineTarget()
     {
-        return _playerBase.transform.position;
+        return randPos;
+        //return _playerBase.transform.position;
     }
 }

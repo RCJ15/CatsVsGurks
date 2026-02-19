@@ -23,6 +23,11 @@ public class VisualsPlane : MonoBehaviour
         return Transform.TransformDirection(SimulationPlane.Transform.InverseTransformDirection(direction));
     }
 
+    public static Vector3 TransformScale(Vector3 scale)
+    {
+        return Vector3.Scale(Transform.localScale, scale);
+    }
+
     public static Quaternion TransformRotation(Vector3 forward, Vector3 up)
     {
         forward = TransformDirection(forward);

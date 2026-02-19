@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 2101622895137071932}
   - component: {fileID: 8493982011145930727}
   - component: {fileID: 1325872937964714283}
+  - component: {fileID: 4654949911029492548}
   m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
@@ -161,6 +162,18 @@ MonoBehaviour:
   radius: 0.5
   block: 1
   cost: 0
+--- !u!114 &4654949911029492548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6720566093713988351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
 --- !u!1 &6827759911357000480
 GameObject:
   m_ObjectHideFlags: 0

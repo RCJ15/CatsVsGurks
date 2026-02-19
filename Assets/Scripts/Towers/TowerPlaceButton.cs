@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class TowerPlaceButton : MonoBehaviour
 {
@@ -43,6 +44,11 @@ public class TowerPlaceButton : MonoBehaviour
         }
 
         UpdateInteractable();
+    }
+
+    public void tempPlaceTower(Vector3 pos)
+    {
+        Instantiate(tower, pos, Quaternion.Euler(0, Random.Range(0, 360), 0));
     }
 
     private void UpdateInteractable()
