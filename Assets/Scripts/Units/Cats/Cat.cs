@@ -18,8 +18,8 @@ public class Cat : Unit
         _laserPointer = LaserPointer.Instance;
     }
 
-    protected override Vector3 DetermineTarget()
+    protected override Vector3? DetermineTarget()
     {
-        return LaserPointer.Position;
+        return LaserPointer.Point;
     }
 }

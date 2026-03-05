@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class Unit : Entity
 {
-    private static readonly RaycastHit[] _hit = new RaycastHit[2];
+    private static readonly RaycastHit[] _hit = new RaycastHit[5];
 
     public abstract Team Team { get; }
 
@@ -49,7 +49,7 @@ public abstract class Unit : Entity
     [SerializeField] private float speed = 5;
     [SerializeField] private float turnSpeed = 2f;
     private Vector3 _desiredDirection;
-    private Vector3 _currentDirection;
+    private float _currentAngle;
 
     [Tooltip("How many seconds it takes for this unit to accelerate to max speed")]
     [SerializeField] private float timeToAccelerate = 0.1f;
@@ -97,7 +97,7 @@ public abstract class Unit : Entity
         UpdateAccelerationRates();
 
         _path.Add(rb.position);
-        _currentDirection = transform.forward;
+        _desiredDirection = transform.forward;
     }
 
     protected virtual void Start()
@@ -162,11 +162,11 @@ public abstract class Unit : Entity
 
     protected virtual void Update()
     {
-        Vector3 targetPos = DetermineTarget();
+        Vector3? targetPos = DetermineTarget();
 
-        if (targetPos != _targetPos)
+        if (targetPos.HasValue && targetPos.Value != _targetPos)
         {
-            _targetPos = targetPos;
+            _targetPos = targetPos.Value;
             _updatePath = true;
         }
 
@@ -174,8 +174,7 @@ public abstract class Unit : Entity
     }
 
     public bool HasLineOfSight(Vector3 pos) => HasLineOfSight(pos, out _);
-    public bool HasLineOfSight(Vector3 pos, out float dist) => HasLineOfSight(pos, 1, out dist);
-    public bool HasLineOfSight(Vector3 pos, float widthMultiplier, out float dist, LayerMask? layerOverride = null)
+    public bool HasLineOfSight(Vector3 pos, out float dist, LayerMask? layerOverride = null)
     {
         Vector3 thisPos = transform.position;
         Vector3 direction = pos - thisPos;
@@ -189,7 +188,7 @@ public abstract class Unit : Entity
         {
             float t = (float)i / (float)_globalUnitSettings.LineOfSightRaysPerSide;
 
-            Ray ray = new Ray(transform.position + perpendicular * (t * _globalUnitSettings.LineOfSightRayWidth * widthMultiplier), direction);
+            Ray ray = new Ray(transform.position + perpendicular * (t * _globalUnitSettings.LineOfSightRayWidth), direction);
 
             int count = Physics.RaycastNonAlloc(ray, _hit, dist, layerOverride.HasValue ? layerOverride.Value : _globalUnitSettings.LineOfSightLayer);
 
@@ -223,14 +222,26 @@ public abstract class Unit : Entity
         _forcePathUpdateIndex++;
     }
 
-    protected abstract Vector3 DetermineTarget();
+    protected abstract Vector3? DetermineTarget();
 
     protected virtual void LateUpdate()
     {
+        float delta = turnSpeed * Time.deltaTime;
+
+        float angle = Mathf.Atan2(_desiredDirection.z, _desiredDirection.x) * Mathf.Rad2Deg;
+
+        _currentAngle = Mathf.LerpAngle(_currentAngle, angle, delta);
+
+        Vector3 dir = new(Mathf.Cos(_currentAngle * Mathf.Deg2Rad), 0, Mathf.Sin(_currentAngle * Mathf.Deg2Rad));
+
+        transform.forward = dir;
+
+        /*
         _currentDirection = Vector3.Slerp(_currentDirection, _desiredDirection, turnSpeed * Time.deltaTime);
         _currentDirection.Normalize();
 
         transform.forward = _currentDirection;
+        */
     }
 
     private async void Pathfind(CancellationToken token)
@@ -286,7 +297,7 @@ public abstract class Unit : Entity
                 {
                     Vector3 pos = _path[i];
 
-                    if (HasLineOfSight(pos, 0.75f, out _, _globalUnitSettings.ObstacleLayer))
+                    if (HasLineOfSight(pos, out _, _globalUnitSettings.ObstacleLayer))
                     {
                         foundBetterPath = true;
                         index = i;
@@ -312,7 +323,7 @@ public abstract class Unit : Entity
 
                         Vector3 point = Vector3.Lerp(p1, p2, t);
 
-                        if (HasLineOfSight(point, 0.75f, out _, _globalUnitSettings.ObstacleLayer))
+                        if (HasLineOfSight(point, out _, _globalUnitSettings.ObstacleLayer))
                         {
                             _betterPoint = point;
                         }
@@ -338,6 +349,13 @@ public abstract class Unit : Entity
 
         float sqrDist = (rb.position - moveTo).sqrMagnitude;
 
+        if (sqrDist <= _globalUnitSettings.DestinationDistSqr)
+        {
+            _pathIndex = Mathf.Min(_pathIndex + 1, _pathCount - 1);
+            _betterPoint = null;
+            _findBetterPointFrame = 0;
+        }
+
         if (_hasTargetLineOfSight)
         {
             targetVelocity = sqrDist <= _globalUnitSettings.DestinationDistSqr ? 0 : speed;
@@ -345,14 +363,9 @@ public abstract class Unit : Entity
         else
         {
             targetVelocity = _pathIndex >= _pathCount ? 0 : speed;
-
-            if (sqrDist <= _globalUnitSettings.DestinationDistSqr)
-            {
-                _pathIndex++;
-                _betterPoint = null;
-                _findBetterPointFrame = 0;
-            }
         }
+
+        _TEMP_REMOVEmoveTo = moveTo;
 
         float acceleration = GetAccelerationRate(_currentVelocity, targetVelocity, _accelerationRate, _decelerationRate);
         _currentVelocity = Mathf.MoveTowards(_currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
@@ -363,8 +376,8 @@ public abstract class Unit : Entity
 
         Vector3 velocity = rb.linearVelocity;
 
-        velocity.x = _currentDirection.x * _currentVelocity;
-        velocity.z = _currentDirection.z * _currentVelocity;
+        velocity.x = _desiredDirection.x * _currentVelocity;
+        velocity.z = _desiredDirection.z * _currentVelocity;
 
         rb.linearVelocity = velocity;
     }
@@ -409,6 +422,7 @@ public abstract class Unit : Entity
         Gizmos.matrix = startMatrix;
     }
 
+    private Vector3 _TEMP_REMOVEmoveTo;
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -424,6 +438,10 @@ public abstract class Unit : Entity
 
             previousPos = point;
         }
+
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawSphere(_TEMP_REMOVEmoveTo, 0.2f);
     }
 #endif
 }

@@ -33,7 +33,7 @@ public class Gurk : Unit
         _playerBase = PlayerBase.Instance;
     }
 
-    protected override Vector3 DetermineTarget()
+    protected override Vector3? DetermineTarget()
     {
         return randPos;
         //return _playerBase.transform.position;

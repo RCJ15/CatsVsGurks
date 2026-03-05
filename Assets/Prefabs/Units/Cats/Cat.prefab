@@ -142,7 +142,7 @@ MonoBehaviour:
   defense: 0
   unitName: Warrior Cat
   speed: 5
-  turnSpeed: 3
+  turnSpeed: 5
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   damage: 25

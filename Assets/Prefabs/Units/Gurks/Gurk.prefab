@@ -51,7 +51,7 @@ MonoBehaviour:
   hp: 100
   defense: 0
   unitName: Gurk
-  speed: 5
+  speed: 4
   turnSpeed: 3
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05

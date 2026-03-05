@@ -3,6 +3,7 @@ using UnityEngine;
 using Meta.XR;
 using System;
 
+// Moved most of this code to the LaserPointer script, don't think we need this?
 public class FollowPointer : MonoBehaviour
 {
     public Transform rightControllerAnchor;
@@ -130,11 +131,9 @@ public class FollowPointer : MonoBehaviour
         if (Physics.Raycast(ray, out hit, maxDistance, _unitSettings.ObstacleLayer))
         {
             endPoint = hit.point;
-            LaserPointer.Position = endPoint;
             
             Debug.Log($"Ray hit: {hit.collider.name} at {endPoint}");
 
-            /*
             // Outer line
             lineRenderer.SetPosition(0, origin);
             lineRenderer.SetPosition(1, endPoint);
@@ -154,11 +153,9 @@ public class FollowPointer : MonoBehaviour
                 StopCoroutine(hideRoutine);
 
             hideRoutine = StartCoroutine(HideAfter(showDuration));
-            */
         }
         else
         {
-            /*
             Debug.Log("Raycast did not hit anything");
             if (lineRenderer.enabled)
                 lineRenderer.enabled = false;
@@ -170,8 +167,6 @@ public class FollowPointer : MonoBehaviour
                 StopCoroutine(hideRoutine);
                 hideRoutine = null;
             }
-
-            */
         }
     }
 

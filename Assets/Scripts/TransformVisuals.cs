@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TransformVisuals : MonoBehaviour
 {
-    private Transform _root;
+    private Transform _parent;
     private Transform _transform;
 
     private Vector3 _offset;
@@ -12,8 +12,10 @@ public class TransformVisuals : MonoBehaviour
     {
         _transform = transform;
         _offset = _transform.localPosition;
-        _root = _transform.root;
+        _parent = _transform.parent;
         _startScale = _transform.localScale;
+
+        _transform.SetParent(null, true);
     }
 
     private void LateUpdate()
@@ -21,8 +23,8 @@ public class TransformVisuals : MonoBehaviour
         if (VisualsPlane.Instance == null) return;
         if (SimulationPlane.Instance == null) return;
 
-        _transform.position = VisualsPlane.TransformPoint(_root.position + _offset);
-        _transform.rotation = VisualsPlane.TransformRotation(_root.forward, _root.up);
-        _transform.localScale = VisualsPlane.TransformScale(_startScale);
+        _transform.position = VisualsPlane.TransformPoint(_parent.position + _offset);
+        _transform.rotation = VisualsPlane.TransformRotation(_parent.forward, _parent.up);
+        _transform.localScale = VisualsPlane.TransformScale(Vector3.Scale(_parent.lossyScale, _startScale));
     }
 }
