@@ -23,6 +23,10 @@ public class HiveMQSubscriber : MonoBehaviour
     private IMqttClient client;
     private MqttFactory factory;
 
+    public Menu menu;
+
+    private bool toggleMenuRequested = false;
+
     async void Start()
     {
         factory = new MqttFactory();
@@ -47,6 +51,23 @@ public class HiveMQSubscriber : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError("Connection failed: " + ex.Message);
+        }
+    }
+
+    void Update()
+    {
+        if (toggleMenuRequested)
+        {
+            toggleMenuRequested = false;
+
+            if (menu != null)
+            {
+                menu.OpenCloseMenu();
+            }
+            else
+            {
+                Debug.LogError("Menu reference is not assigned in Inspector!");
+            }
         }
     }
 
@@ -96,24 +117,22 @@ public class HiveMQSubscriber : MonoBehaviour
         }
         else if (topic == topic_button)
         {
-            Debug.Log("Button signal: " + payload);
 
             if (payload == "1")
             {
-                Debug.Log("Button pressed");
+                toggleMenuRequested = true;
             }
         }
         else if (topic == topic_selected)
         {
-            Debug.Log("Selected signal: " + payload);
 
             if (payload == "3")
             {
-                Debug.Log("Selected = 3");
+
             }
             else if (payload == "4")
             {
-                Debug.Log("Selected = 4");
+
             }
         }
         else if (topic == topic_pot)
