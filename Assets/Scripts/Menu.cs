@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class Menu : MonoBehaviour
 {
@@ -61,7 +62,7 @@ public class Menu : MonoBehaviour
             StartCoroutine(AnimateMenu(targetPosition, targetRotation));
 
             isOpen = true;
-            source.PlayOneShot(openMenu, 0.4f);
+            source.PlayOneShot(openMenu, 0.3f);
             Time.timeScale = 0.0f;
         }
     }
@@ -93,4 +94,20 @@ public class Menu : MonoBehaviour
         panel.transform.position = targetPosition;
         panel.transform.rotation = targetRotation;
     }
+
+
+
+    [SerializeField] private OVRInput.RawButton menuToggleButton;
+    private void Update()
+    {
+        
+
+        if (OVRInput.GetDown(menuToggleButton))
+        {
+            Console.WriteLine("Menu Toggle Button Pressed");
+            OpenCloseMenu();
+        }
+    }
+
+
 }

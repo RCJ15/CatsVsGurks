@@ -7,6 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class Unit : Entity
 {
+    private Vector3 _TEMP_REMOVEmoveTo;
+
     private static readonly RaycastHit[] _hit = new RaycastHit[5];
 
     public abstract Team Team { get; }
@@ -422,7 +424,7 @@ public abstract class Unit : Entity
         Gizmos.matrix = startMatrix;
     }
 
-    private Vector3 _TEMP_REMOVEmoveTo;
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;

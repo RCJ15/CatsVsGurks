@@ -5,6 +5,7 @@ using UnityEngine;
 using MQTTnet;
 using MQTTnet.Client;
 
+
 public class HiveMQSubscriber : MonoBehaviour
 {
     [Header("Broker Settings")]
