@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class LaserPointer : MonoBehaviour
 {
@@ -10,7 +9,7 @@ public class LaserPointer : MonoBehaviour
 
     public static LaserPointer Instance { get; private set; }
 
-    public static Vector3? Point { get; private set; } = null;
+    public static Vector3 Point { get; private set; }
 
     public static ClickableObject CurrentClickable
     {
@@ -37,6 +36,11 @@ public class LaserPointer : MonoBehaviour
     }
     private static ClickableObject _currentClickable;
 
+    public float AttractionRange => attractionRange;
+    public float SqrAttractionRange { get; private set; }
+    public float TimeUntilAttracted => timeUntilAttracted;
+    public float AttractionDuration => attractionDuration;
+
     [SerializeField] private LayerMask hitLayer;
     [SerializeField] private float maxDistance;
 
@@ -51,9 +55,16 @@ public class LaserPointer : MonoBehaviour
     [Space]
     [SerializeField] private LineRenderer laser;
 
+    [Header("Attraction")]
+    [SerializeField] private float attractionRange;
+    [SerializeField] private float timeUntilAttracted;
+    [SerializeField] private float attractionDuration;
+
     private void Awake()
     {
         Instance = this;
+
+        SqrAttractionRange = attractionRange * attractionRange;
     }
 
     private void Update()
@@ -90,10 +101,11 @@ public class LaserPointer : MonoBehaviour
 
         if (!success)
         {
+            Vector3 hitPoint = hand.position + (hand.forward * maxDistance);
             laser.SetPosition(0, hand.position);
-            laser.SetPosition(1, hand.position + (hand.forward * maxDistance));
+            laser.SetPosition(1, hitPoint);
 
-            Point = null;
+            Point = SimulationPlane.TransformPoint(hitPoint);
             CurrentClickable = null;
             return;
         }

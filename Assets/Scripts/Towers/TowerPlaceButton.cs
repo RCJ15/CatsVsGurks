@@ -40,7 +40,7 @@ public class TowerPlaceButton : MonoBehaviour
         {
             PlacingTower = false;
             _thisPlacingTower = false;
-            Instantiate(tower, LaserPointer.Point.Value, Quaternion.identity);
+            Instantiate(tower, LaserPointer.Point, Quaternion.identity);
         }
 
         UpdateInteractable();

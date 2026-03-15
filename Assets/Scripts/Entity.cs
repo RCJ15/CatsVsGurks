@@ -1,7 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
+    public abstract Team Team { get; }
+    public bool Targettable { get; set; } = true;
+
+    public static readonly Dictionary<Collider, Entity> EntityColliders = new();
+    public Collider Collider { get; private set; }
+
     #region Stats
     public float MaxHP
     {
@@ -59,8 +66,36 @@ public class Entity : MonoBehaviour
         _currentHp = hp;
     }
 
+    protected virtual void OnEnable()
+    {
+        Collider = GetComponentInChildren<Collider>(true);
+
+        if (Collider == null) return;
+        EntityColliders.Add(Collider, this);
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (Collider == null) return;
+        EntityColliders.Remove(Collider);
+    }
+
     public virtual void Hurt(float damage, Unit from)
     {
         HP -= Mathf.Max(damage - defense, 1);
+
+        // DIE
+        if (HP <= 0)
+        {
+            Die();
+        }
     }
+
+    public virtual void Die()
+    {
+        Targettable = false;
+        Destroy(gameObject);
+    }
+
+    public abstract void Knockback(float force, Vector3 from);
 }

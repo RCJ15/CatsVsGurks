@@ -1,3 +1,5 @@
+using Meta.WitAi.CallbackHandlers;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Gurk : Unit
@@ -33,9 +35,22 @@ public class Gurk : Unit
         _playerBase = PlayerBase.Instance;
     }
 
+    protected override Entity DetermineEntityTarget()
+    {
+        Entity result = base.DetermineEntityTarget();
+
+        /*
+        if (result == null)
+        {
+            result = _playerBase;
+        }
+        */
+
+        return result;
+    }
+
     protected override Vector3? DetermineTarget()
     {
-        return randPos;
-        //return _playerBase.transform.position;
+        return null;
     }
 }

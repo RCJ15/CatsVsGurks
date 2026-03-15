@@ -4,9 +4,14 @@ public class GlobalUnitSettings : MonoBehaviour
 {
     public static GlobalUnitSettings Instance { get; private set; }
 
-    public float DestinationDist => destinationDist;
-    public float DestinationDistSqr { get; private set; }
-    public float SampleSearchDistance => sampleSearchDistance;
+    public float ReachedPointDist => reachedPointDist;
+    public float ReachedPointDistSqr { get; private set; }
+    public float ReachedDestinationDist => reachedDestinationDist;
+    public float ReachedDestinationDistSqr { get; private set; }
+    public float UnitKnockbackDelta => unitKnockbackDelta;
+
+    public float TimeBtwWanderingPoints => timeBtwWanderingPoints;
+    public float WanderingRange => WanderingRange;
 
     public LayerMask LineOfSightLayer => lineOfSightLayer;
     public LayerMask ObstacleLayer => obstacleLayer;
@@ -17,8 +22,13 @@ public class GlobalUnitSettings : MonoBehaviour
     public int ForcePathUpdateIndex => forcePathUpdateIndex;
     public int FindBetterPointFrameCount => findBetterPointFrameCount;
 
-    [SerializeField] private float destinationDist = 0.1f;
-    [SerializeField] private float sampleSearchDistance = 15f;
+    [SerializeField] private float reachedPointDist = 0.1f;
+    [SerializeField] private float reachedDestinationDist = 0.5f;
+    [SerializeField] private float unitKnockbackDelta;
+
+    [Header("Wandering State")]
+    [SerializeField] private float timeBtwWanderingPoints;
+    [SerializeField] private float wanderingRange;
 
     [Space]
     [SerializeField] private LayerMask lineOfSightLayer;
@@ -34,6 +44,7 @@ public class GlobalUnitSettings : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        DestinationDistSqr = DestinationDist * DestinationDist;
+        ReachedPointDistSqr = ReachedPointDist * ReachedPointDist;
+        ReachedDestinationDistSqr = ReachedDestinationDist * ReachedDestinationDist;
     }
 }

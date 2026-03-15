@@ -9,11 +9,17 @@ public abstract class Unit : Entity
 {
     private static readonly RaycastHit[] _hit = new RaycastHit[5];
 
-    public abstract Team Team { get; }
-
     public static readonly Dictionary<Team, List<Unit>> AllUnits = new();
 
+    public Animator Animator { get; private set; }
+    public Action<string> OnAnimEvent { get; set; }
+    public bool CanMove { get; set; } = true;
+
     private Vector3 _targetPos;
+    private bool _reachedTarget;
+    private List<Entity> _entityTargetList = new();
+    protected Entity _entityTarget;
+    private bool _entityTargetInRange;
 
     [Space]
     [SerializeField] private string unitName;
@@ -60,16 +66,23 @@ public abstract class Unit : Entity
     private float _currentVelocity;
 
     [Space]
+    [SerializeField] private UnitAttack attack;
     [Tooltip("Damage, self explanatory")]
     [SerializeField] private float damage = 25;
     [Tooltip("Seconds of delay between each attack")]
     [SerializeField] private float attackDelay = 0.5f;
+    private float _attackCooldown;
     [Tooltip("How close/far a unit needs to be before this unit will attempt to attack")]
     [SerializeField] private float range = 1;
     [Tooltip("How close/far a unit needs to be before this unit will give chase")]
     [SerializeField] private float chaseRange = 10;
+    protected float _sqrRange;
+    protected float _sqrChaseRange;
 
     [SerializeField] private Rigidbody rb;
+
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem walkParticles;
 
     private PathfindingManager _manager;
     private GlobalUnitSettings _globalUnitSettings;
@@ -85,10 +98,11 @@ public abstract class Unit : Entity
     private int _forcePathUpdateIndex;
 
     private bool _hasTargetLineOfSight;
-    private float _distFromTarget;
 
     private int _findBetterPointFrame;
     private Vector3? _betterPoint = null;
+
+    private Vector3 _knockbackForce;
 
     protected override void Awake()
     {
@@ -98,6 +112,13 @@ public abstract class Unit : Entity
 
         _path.Add(rb.position);
         _desiredDirection = transform.forward;
+
+        _sqrRange = range * range;
+        _sqrChaseRange = chaseRange * chaseRange;
+
+        _attackCooldown = attackDelay;
+
+        Animator = GetComponentInChildren<Animator>(true);
     }
 
     protected virtual void Start()
@@ -108,8 +129,10 @@ public abstract class Unit : Entity
         BeginInvokeRepeating();
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         if (AllUnits.TryGetValue(Team, out var list))
         {
             list.Add(this);
@@ -130,8 +153,10 @@ public abstract class Unit : Entity
         InvokeRepeating(nameof(UpdatePathfinding), _globalUnitSettings.PathfindUpdateTimer, _globalUnitSettings.PathfindUpdateTimer);
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         if (AllUnits.TryGetValue(Team, out var list))
         {
             list.Remove(this);
@@ -162,15 +187,54 @@ public abstract class Unit : Entity
 
     protected virtual void Update()
     {
-        Vector3? targetPos = DetermineTarget();
-
-        if (targetPos.HasValue && targetPos.Value != _targetPos)
+        if (_entityTarget != null && !_entityTarget.Targettable)
         {
-            _targetPos = targetPos.Value;
+            _entityTarget = null;
+        }
+
+        if (_entityTarget == null)
+        {
+            _entityTarget = DetermineEntityTarget();
+        }
+
+        Vector3 pos;
+
+        if (_entityTarget != null)
+        {
+            pos = _entityTarget.transform.position;
+        }
+        else
+        {
+            Vector3? targetPos = DetermineTarget();
+
+            if (targetPos.HasValue)
+            {
+                pos = targetPos.Value;
+            }
+            else
+            {
+                pos = transform.position;
+            }
+        }
+
+        if (pos != _targetPos)
+        {
+            _targetPos = pos;
             _updatePath = true;
         }
 
-        _hasTargetLineOfSight = HasLineOfSight(_targetPos, out _distFromTarget);
+        _hasTargetLineOfSight = HasLineOfSight(_targetPos);
+
+        // Attack logic
+        if (_attackCooldown > 0)
+        {
+            _attackCooldown -= Time.deltaTime;
+        }
+
+        if (_attackCooldown <= 0 && _entityTargetInRange)
+        {
+            Attack();
+        }
     }
 
     public bool HasLineOfSight(Vector3 pos) => HasLineOfSight(pos, out _);
@@ -206,6 +270,11 @@ public abstract class Unit : Entity
 
     private void UpdatePathfinding()
     {
+        if (_reachedTarget)
+        {
+            return;
+        }
+
         bool forced = _forcePathUpdateIndex >= _globalUnitSettings.ForcePathUpdateIndex;
 
         if (((!_hasTargetLineOfSight && _updatePath) || forced) && !_pathfinding)
@@ -222,6 +291,33 @@ public abstract class Unit : Entity
         _forcePathUpdateIndex++;
     }
 
+    protected virtual Entity DetermineEntityTarget()
+    {
+        _entityTargetList.Clear();
+
+        Team oppositeTeam = Team == Team.Player ? Team.Enemy : Team.Player;
+        if (AllUnits.TryGetValue(oppositeTeam, out var list))
+        {
+            _entityTargetList.AddRange(list);
+        }
+
+        Entity result = null;
+        float closestDist = float.MaxValue;
+
+        foreach (Entity entity in _entityTargetList)
+        {
+            float sqrDist = (transform.position - entity.transform.position).sqrMagnitude;
+
+            if (sqrDist < _sqrChaseRange && sqrDist < closestDist)
+            {
+                closestDist = sqrDist;
+                result = entity;
+            }
+        }
+
+        return result;
+    }
+
     protected abstract Vector3? DetermineTarget();
 
     protected virtual void LateUpdate()
@@ -236,12 +332,38 @@ public abstract class Unit : Entity
 
         transform.forward = dir;
 
+        // Reached Destination
+        Vector3 pos = transform.position;
+        pos.y = _targetPos.y;
+
+        float sqrDist = (pos - _targetPos).sqrMagnitude;
+
+        if (_entityTarget != null)
+        {
+            _entityTargetInRange = sqrDist <= _sqrRange;
+        }
+        else
+        {
+            _entityTargetInRange = false;
+        }
+
+        _reachedTarget = _entityTargetInRange || sqrDist <= _globalUnitSettings.ReachedDestinationDist;
+
         /*
         _currentDirection = Vector3.Slerp(_currentDirection, _desiredDirection, turnSpeed * Time.deltaTime);
         _currentDirection.Normalize();
 
         transform.forward = _currentDirection;
         */
+    }
+
+    protected void Attack()
+    {
+        _attackCooldown = attackDelay;
+
+        UnitAttack spawnedAttack = Instantiate(attack, transform.position, transform.rotation, transform);
+        spawnedAttack.User = this;
+        spawnedAttack.Target = _entityTarget;
     }
 
     private async void Pathfind(CancellationToken token)
@@ -275,111 +397,182 @@ public abstract class Unit : Entity
     protected virtual void FixedUpdate()
     {
         float targetVelocity;
-
         Vector3 moveTo;
 
-        if (_hasTargetLineOfSight)
+        if (CanMove)
         {
-            moveTo = _targetPos;
-        }
-        else
-        {
-            int index = _pathIndex;
-
-            // Find better path (should prevent going in circles)
-            if (_findBetterPointFrame <= 0 && _pathIndex < _pathCount)
+            if (!_reachedTarget)
             {
-                _findBetterPointFrame = _globalUnitSettings.FindBetterPointFrameCount;
-
-                bool foundBetterPath = false;
-
-                for (int i = _pathIndex + 1; i < _pathCount; i++)
+                if (_hasTargetLineOfSight || _pathIndex >= _pathCount)
                 {
-                    Vector3 pos = _path[i];
-
-                    if (HasLineOfSight(pos, out _, _globalUnitSettings.ObstacleLayer))
-                    {
-                        foundBetterPath = true;
-                        index = i;
-                    }
+                    moveTo = _targetPos;
                 }
-
-                if (foundBetterPath)
+                else
                 {
-                    _pathIndex = index;
-                }
-                else if (_pathIndex < _pathCount - 1)
-                {
-                    Vector3 p1 = _path[_pathIndex];
-                    Vector3 p2 = _path[_pathIndex + 1];
+                    int index = _pathIndex;
 
-                    float nextPointDist = Vector2.Distance(new Vector2(p1.x, p1.z), new Vector2(p2.x, p2.z));
-
-                    int points = Mathf.RoundToInt(nextPointDist);
-
-                    for (int i = 0; i < points; i++)
+                    // Find better path (should prevent going in circles)
+                    if (_findBetterPointFrame <= 0 && _pathIndex < _pathCount)
                     {
-                        float t = (float)i / (float)points;
+                        _findBetterPointFrame = _globalUnitSettings.FindBetterPointFrameCount;
 
-                        Vector3 point = Vector3.Lerp(p1, p2, t);
+                        bool foundBetterPath = false;
 
-                        if (HasLineOfSight(point, out _, _globalUnitSettings.ObstacleLayer))
+                        for (int i = _pathIndex + 1; i < _pathCount; i++)
                         {
-                            _betterPoint = point;
+                            Vector3 pos = _path[i];
+
+                            if (HasLineOfSight(pos, out _, _globalUnitSettings.ObstacleLayer))
+                            {
+                                foundBetterPath = true;
+                                index = i;
+                            }
+                        }
+
+                        if (foundBetterPath)
+                        {
+                            _pathIndex = index;
+                        }
+                        else if (_pathIndex < _pathCount - 1)
+                        {
+                            Vector3 p1 = _path[_pathIndex];
+                            Vector3 p2 = _path[_pathIndex + 1];
+
+                            float nextPointDist = Vector2.Distance(new Vector2(p1.x, p1.z), new Vector2(p2.x, p2.z));
+
+                            int points = Mathf.RoundToInt(nextPointDist);
+
+                            for (int i = 0; i < points; i++)
+                            {
+                                float t = (float)i / (float)points;
+
+                                Vector3 point = Vector3.Lerp(p1, p2, t);
+
+                                if (HasLineOfSight(point, out _, _globalUnitSettings.ObstacleLayer))
+                                {
+                                    _betterPoint = point;
+                                }
+                            }
                         }
                     }
+
+                    _findBetterPointFrame--;
+
+                    if (_betterPoint.HasValue)
+                    {
+                        moveTo = _betterPoint.Value;
+                    }
+                    else if (_pathCount > 0)
+                    {
+                        moveTo = _path[Mathf.Min(index, _pathCount - 1)];
+                    }
+                    else
+                    {
+                        moveTo = rb.position;
+                    }
                 }
-            }
 
-            _findBetterPointFrame--;
+                float sqrDist = (rb.position - moveTo).sqrMagnitude;
+                bool reachedTarget = sqrDist <= _globalUnitSettings.ReachedPointDistSqr;
 
-            if (_betterPoint.HasValue)
-            {
-                moveTo = _betterPoint.Value;
-            }
-            else if (_pathCount > 0)
-            {
-                moveTo = _path[Mathf.Min(index, _pathCount - 1)];
+                if (reachedTarget)
+                {
+                    _pathIndex = Mathf.Clamp(_pathIndex + 1, 0, _pathCount);
+                    _betterPoint = null;
+                    _findBetterPointFrame = 0;
+                }
+
+                if (_hasTargetLineOfSight)
+                {
+                    targetVelocity = reachedTarget ? 0 : speed;
+                }
+                else
+                {
+                    targetVelocity = _pathIndex >= _pathCount ? 0 : speed;
+                }
             }
             else
             {
-                moveTo = rb.position;
+                targetVelocity = 0;
+                moveTo = _targetPos;
             }
-        }
 
-        float sqrDist = (rb.position - moveTo).sqrMagnitude;
-
-        if (sqrDist <= _globalUnitSettings.DestinationDistSqr)
-        {
-            _pathIndex = Mathf.Min(_pathIndex + 1, _pathCount - 1);
-            _betterPoint = null;
-            _findBetterPointFrame = 0;
-        }
-
-        if (_hasTargetLineOfSight)
-        {
-            targetVelocity = sqrDist <= _globalUnitSettings.DestinationDistSqr ? 0 : speed;
+            _desiredDirection = moveTo - rb.position;
+            _desiredDirection.y = 0;
+            _desiredDirection.Normalize();
         }
         else
         {
-            targetVelocity = _pathIndex >= _pathCount ? 0 : speed;
+            targetVelocity = 0;
         }
-
-        _TEMP_REMOVEmoveTo = moveTo;
 
         float acceleration = GetAccelerationRate(_currentVelocity, targetVelocity, _accelerationRate, _decelerationRate);
         _currentVelocity = Mathf.MoveTowards(_currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
-
-        _desiredDirection = moveTo - rb.position;
-        _desiredDirection.y = 0;
-        _desiredDirection.Normalize();
 
         Vector3 velocity = rb.linearVelocity;
 
         velocity.x = _desiredDirection.x * _currentVelocity;
         velocity.z = _desiredDirection.z * _currentVelocity;
 
-        rb.linearVelocity = velocity;
+        rb.linearVelocity = velocity + _knockbackForce;
+
+        _knockbackForce = Vector3.MoveTowards(_knockbackForce, Vector3.zero, _globalUnitSettings.UnitKnockbackDelta * Time.fixedDeltaTime);
+
+        // Set animation variables
+        SetAnimBool("Moving", targetVelocity != 0);
+
+        if (targetVelocity != 0)
+        {
+            SetAnimFloat("Speed", targetVelocity);
+        }
+    }
+
+    public override void Hurt(float damage, Unit from)
+    {
+        base.Hurt(damage, from);
+
+        // Attack the unit that attacks this unit
+        _entityTarget = from;
+    }
+
+    public override void Knockback(float force, Vector3 from)
+    {
+        Vector2 direction = rb.position - from;
+        direction.y = 0;
+        direction.Normalize();
+
+        _knockbackForce = direction * force;
+    }
+
+    #region Animation parameters
+    public void SetAnimTrigger(string name)
+    {
+        if (Animator != null)
+            Animator.SetTrigger(name);
+    }
+
+    public void SetAnimBool(string name, bool b)
+    {
+        if (Animator != null)
+            Animator.SetBool(name, b);
+    }
+
+    public void SetAnimFloat(string name, float f)
+    {
+        if (Animator != null)
+            Animator.SetFloat(name, f);
+    }
+    #endregion
+
+    public void TriggerAnimEvent(string name)
+    {
+        if (name == "Walk" && walkParticles != null)
+        {
+            walkParticles.Play();
+            Debug.Log("WALK!!");
+        }
+
+        OnAnimEvent?.Invoke(name);
     }
 
     private void SetAccelerationRate(ref float value, float timeToAccelerate, float distance = 1)
