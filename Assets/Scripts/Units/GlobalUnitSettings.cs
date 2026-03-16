@@ -44,6 +44,7 @@ public class GlobalUnitSettings : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
         ReachedPointDistSqr = ReachedPointDist * ReachedPointDist;
         ReachedDestinationDistSqr = ReachedDestinationDist * ReachedDestinationDist;
     }

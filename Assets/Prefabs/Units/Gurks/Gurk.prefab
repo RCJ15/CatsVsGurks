@@ -605,6 +605,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WalkParticles
       objectReference: {fileID: 0}
+    - target: {fileID: 4899055741661139350, guid: cc35973b47013794094ae59c00d6a022, type: 3}
+      propertyPath: moveWithCustomTransform
+      value: 
+      objectReference: {fileID: 2104676609165092854}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -14,6 +14,18 @@ public abstract class UnitAttack : MonoBehaviour
         DisableCollider();
     }
 
+    public void SubscribeToDeath()
+    {
+        if (User == null) return;
+        User.OnDie += Die;
+    }
+
+    public void UnsubscribeToDeath()
+    {
+        if (User == null) return;
+        User.OnDie -= Die;
+    }
+
     protected void EnableCollider() => col.enabled = true;
     protected void DisableCollider() => col.enabled = false;
 
@@ -39,6 +51,12 @@ public abstract class UnitAttack : MonoBehaviour
 
         // Damage
         OnHitEntity(entity);
+    }
+
+    public virtual void Die()
+    {
+        UnsubscribeToDeath();
+        Destroy(gameObject);
     }
 
     protected virtual void OnHitEntity(Entity entity)
