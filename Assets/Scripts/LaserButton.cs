@@ -28,13 +28,21 @@ public class LaserButton : MonoBehaviour, IClickable
         Debug.Log("LaserButton deselected");
     }
 
+    private void Update()
+    {
+        Debug.Log("Position of left controller" + OVRInput.GetControllerPositionTracked(OVRInput.Controller.LTouch));
+    }
+
     public void OnSelect()
     {
+
         Debug.Log("LaserButton selected");
     }
 
     private void ResetGame()
     {
+        Debug.ClearDeveloperConsole();
+        Debug.Log("Resetting game...");
         // Ensure time scale is normal (in case the game was paused)
         Time.timeScale = 1f;
 
@@ -44,6 +52,8 @@ public class LaserButton : MonoBehaviour, IClickable
 
     private void ResumeGame()
     {
+        
+        Debug.Log("Resuming game...");
         menuManager.GetComponent<Menu>().OpenCloseMenu();
     }
 

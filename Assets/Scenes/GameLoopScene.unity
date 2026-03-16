@@ -393,6 +393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 79804584}
   - component: {fileID: 79804583}
+  - component: {fileID: 79804585}
   m_Layer: 0
   m_Name: VisualsPlane
   m_TagString: Untagged
@@ -428,6 +429,19 @@ Transform:
   - {fileID: 1983052027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &79804585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79804582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719241d09f0b42d4693d8e64bfb050d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BasePlacer
+  targetObject: {fileID: 1731583552}
 --- !u!1 &88515825
 GameObject:
   m_ObjectHideFlags: 0
@@ -4876,6 +4890,11 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!1 &1731583552 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 112276, guid: d9809c5e8418bb047bf2c8ba1d1a2cec, type: 3}
+  m_PrefabInstance: {fileID: 1448943109}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1786689629
 GameObject:
   m_ObjectHideFlags: 0
