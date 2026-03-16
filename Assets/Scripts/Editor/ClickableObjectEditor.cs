@@ -20,6 +20,8 @@ public class ClickableObjectEditor : Editor
 
         while (prop.NextVisible(enterChildren))
         {
+            bool disableProp = false;
+
             enterChildren = false;
 
             string path = prop.propertyPath;
@@ -38,7 +40,9 @@ public class ClickableObjectEditor : Editor
                     }
 
                     prop.objectReferenceValue = col;
-                    continue;
+
+                    disableProp = true;
+                    break;
 
                 case "clickables":
                     prop.ClearArray();
@@ -58,10 +62,16 @@ public class ClickableObjectEditor : Editor
                             i++;
                         }
                     }
-                    continue;
+
+                    disableProp = true;
+                    break;
             }
 
+            EditorGUI.BeginDisabledGroup(disableProp);
+
             EditorGUILayout.PropertyField(prop, true);
+
+            EditorGUI.EndDisabledGroup();
         }
 
         serializedObject.ApplyModifiedProperties();

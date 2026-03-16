@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CatTempAnim
+  m_Controller: {fileID: 9100000, guid: 7b81efc21e13b8349a8a261dc3a98fb2, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 9067093048684652814, guid: 591f6f42143c25345842e16ca01510f4, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: fbd7855a9a3f7914b8c733986e5089ee, type: 2}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: 591f6f42143c25345842e16ca01510f4, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: cb7693cbcec4f124a85b49516acc3577, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7d1fd605e740dc34e990c9bd328120b9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e99574f863b9af14ab29eb0d93674249, type: 2}

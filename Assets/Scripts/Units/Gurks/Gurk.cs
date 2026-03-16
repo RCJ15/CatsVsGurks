@@ -53,4 +53,12 @@ public class Gurk : Unit
     {
         return null;
     }
+
+    public override void Die()
+    {
+        base.Die();
+
+        // Give money to player
+        Player.Money += Random.Range(value.x, value.y);
+    }
 }

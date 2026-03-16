@@ -5,16 +5,12 @@ public abstract class UnitAttack : MonoBehaviour
     public Unit User { get; set; }
     public Entity Target { get; set; }
 
-    public float Distance { get; private set; }
-
     [SerializeField] private Collider col;
     [SerializeField] private bool friendlyFire = false;
     [SerializeField] private float knockbackForce = 3f;
 
     protected virtual void Awake()
     {
-        //Distance = Vector3.Distance(User.transform.position, Target.transform.position);
-
         DisableCollider();
     }
 
