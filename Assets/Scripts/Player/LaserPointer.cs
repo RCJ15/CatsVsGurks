@@ -36,6 +36,9 @@ public class LaserPointer : MonoBehaviour
     }
     private static ClickableObject _currentClickable;
 
+    public Tower TowerToPlace { get; set; }
+    public MeshRenderer TowerPreview { get; set; }
+
     public float AttractionRange => attractionRange;
     public float SqrAttractionRange { get; private set; }
     public float ForcedAttractionRange => attractionRange;

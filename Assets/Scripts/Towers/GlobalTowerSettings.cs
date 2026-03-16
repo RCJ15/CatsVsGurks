@@ -5,9 +5,11 @@ public class GlobalTowerSettings : MonoBehaviour
 {
     public static GlobalTowerSettings Instance { get; private set; }
 
-    public InputActionReference PlacementInputAction => placementInputAction;
+    public Material ValidPreviewMaterial => validPreviewMaterial;
+    public Material InvalidPreviewMaterial => invalidPreviewMaterial;
 
-    [SerializeField] private InputActionReference placementInputAction;
+    [SerializeField] private Material validPreviewMaterial;
+    [SerializeField] private Material invalidPreviewMaterial;
 
     private void Awake()
     {
