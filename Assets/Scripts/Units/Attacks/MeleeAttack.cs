@@ -34,7 +34,7 @@ public class MeleeAttack : UnitAttack
         {
             User.CanMove = true;
 
-            Destroy(gameObject);
+            Die();
         }
     }
 }

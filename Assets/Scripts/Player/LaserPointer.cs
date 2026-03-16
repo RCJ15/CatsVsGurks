@@ -38,9 +38,12 @@ public class LaserPointer : MonoBehaviour
 
     public float AttractionRange => attractionRange;
     public float SqrAttractionRange { get; private set; }
+    public float ForcedAttractionRange => attractionRange;
+    public float SqrForcedAttractionRange { get; private set; }
     public float TimeUntilAttracted => timeUntilAttracted;
     public float AttractionDuration => attractionDuration;
 
+    [SerializeField] private LayerMask clickablesLayer;
     [SerializeField] private LayerMask hitLayer;
     [SerializeField] private float maxDistance;
 
@@ -57,6 +60,7 @@ public class LaserPointer : MonoBehaviour
 
     [Header("Attraction")]
     [SerializeField] private float attractionRange;
+    [SerializeField] private float forcedAttractionRange;
     [SerializeField] private float timeUntilAttracted;
     [SerializeField] private float attractionDuration;
 
@@ -65,6 +69,7 @@ public class LaserPointer : MonoBehaviour
         Instance = this;
 
         SqrAttractionRange = attractionRange * attractionRange;
+        SqrForcedAttractionRange = forcedAttractionRange * forcedAttractionRange;
     }
 
     private void Update()
@@ -91,13 +96,38 @@ public class LaserPointer : MonoBehaviour
         Vector3 position = hand.position;
         Vector3 forward = hand.forward;
 
-        // Raycast
+        // Shoot ray for clickable objects
+        RaycastHit hit;
+        Ray ray = new Ray(position, forward);
+
+        bool success = Physics.RaycastNonAlloc(ray, _hits, maxDistance, clickablesLayer) > 0;
+
+        if (success)
+        {
+            // Check for clickable object
+            hit = _hits[0];
+
+            if (ClickableObject.ColliderToClickable.TryGetValue(hit.collider, out ClickableObject clickable))
+            {
+                CurrentClickable = clickable;
+            }
+            else
+            {
+                CurrentClickable = null;
+            }
+        }
+        else
+        {
+            CurrentClickable = null;
+        }
+
+        // Raycast for laser
         position = SimulationPlane.TransformPoint(position);
         forward = SimulationPlane.TransformDirection(forward);
 
-        Ray ray = new Ray(position, forward);
+        ray = new Ray(position, forward);
 
-        bool success = Physics.RaycastNonAlloc(ray, _hits, maxDistance, hitLayer) > 0;
+        success = Physics.RaycastNonAlloc(ray, _hits, maxDistance, hitLayer) > 0;
 
         if (!success)
         {
@@ -106,26 +136,15 @@ public class LaserPointer : MonoBehaviour
             laser.SetPosition(1, hitPoint);
 
             Point = SimulationPlane.TransformPoint(hitPoint);
-            CurrentClickable = null;
             return;
         }
 
         laser.enabled = true;
 
-        // Check for clickable object
-        RaycastHit hit = _hits[0];
-
+        hit = _hits[0];
         Point = hit.point;
 
         laser.SetPosition(0, hand.position);
         laser.SetPosition(1, VisualsPlane.TransformPoint(hit.point));
-
-        if (!ClickableObject.ColliderToClickable.TryGetValue(hit.collider, out ClickableObject clickable))
-        {
-            CurrentClickable = null;
-            return;
-        }
-
-        CurrentClickable = clickable;
     }
 }

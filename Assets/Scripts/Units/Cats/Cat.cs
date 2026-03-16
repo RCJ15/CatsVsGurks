@@ -10,7 +10,6 @@ public class Cat : Unit
     private bool _attracted;
     private float _attractionTimer;
     private float _attractionDuration;
-    private float _ignoreEntitiesDuration;
 
     protected override void Start()
     {
@@ -28,8 +27,10 @@ public class Cat : Unit
         float sqrDist = (transform.position - point).sqrMagnitude;
         _inAttractionRange = sqrDist <= _laserPointer.SqrAttractionRange;
 
+        bool forced = sqrDist <= _laserPointer.SqrForcedAttractionRange;
+
         // In range
-        if (_inAttractionRange)
+        if (_inAttractionRange && (forced || _entityTarget == null))
         {
             _attractionTimer += Time.deltaTime;
 
@@ -40,10 +41,7 @@ public class Cat : Unit
                 if (!_attracted)
                 {
                     _attractionDuration = _laserPointer.AttractionDuration;
-                    _ignoreEntitiesDuration = _laserPointer.AttractionDuration;
                     _attracted = true;
-
-                    _entityTarget = null;
                 }
             }
         }
@@ -62,30 +60,27 @@ public class Cat : Unit
                 _attractionDuration -= Time.deltaTime;
             }
         }
-
-        if (_ignoreEntitiesDuration > 0)
-        {
-            _ignoreEntitiesDuration -= Time.deltaTime;
-        }
     }
 
-    protected override Entity DetermineEntityTarget()
+    protected override void FoundEntityTarget()
     {
-        if (_ignoreEntitiesDuration > 0)
-        {
-            return null;
-        }
-
-        return base.DetermineEntityTarget();
+        _attractionDuration = 0;
+        _attractionTimer = 0;
+        _attracted = false;
     }
 
-    protected override Vector3? DetermineTarget()
+    protected override Vector3? DetermineTargetPos()
     {
         if (_attractionDuration > 0)
         {
             return LaserPointer.Point;
         }
 
-        return null;
+        return base.DetermineTargetPos();
+    }
+
+    protected override bool TargetPosIsForced()
+    {
+        return _attractionDuration > 0;
     }
 }

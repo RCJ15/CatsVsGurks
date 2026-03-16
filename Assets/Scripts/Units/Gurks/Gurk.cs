@@ -49,9 +49,9 @@ public class Gurk : Unit
         return result;
     }
 
-    protected override Vector3? DetermineTarget()
+    protected override void FoundEntityTarget()
     {
-        return null;
+
     }
 
     public override void Die()

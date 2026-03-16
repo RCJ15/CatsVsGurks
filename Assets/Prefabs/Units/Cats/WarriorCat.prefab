@@ -187,7 +187,7 @@ MonoBehaviour:
   range: 1
   chaseRange: 10
   rb: {fileID: 2354061441159466880}
-  walkParticles: {fileID: 0}
+  walkParticles: {fileID: 1515324228855876032}
 --- !u!54 &2354061441159466880
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -460,6 +460,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc35973b47013794094ae59c00d6a022, type: 3}
+--- !u!198 &1515324228855876032 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4899055741661139350, guid: cc35973b47013794094ae59c00d6a022, type: 3}
+  m_PrefabInstance: {fileID: 6267729089582569558}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6493639969460623602 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 929282229241708708, guid: cc35973b47013794094ae59c00d6a022, type: 3}

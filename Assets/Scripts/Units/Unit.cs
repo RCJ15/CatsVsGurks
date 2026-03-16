@@ -54,7 +54,7 @@ public abstract class Unit : Entity
     [Tooltip("How many tiles per second this unit moves")]
     [SerializeField] private float speed = 5;
     [SerializeField] private float turnSpeed = 2f;
-    private Vector3 _desiredDirection;
+    private Vector3 _lookDirection;
     private float _currentAngle;
 
     [Tooltip("How many seconds it takes for this unit to accelerate to max speed")]
@@ -111,7 +111,7 @@ public abstract class Unit : Entity
         UpdateAccelerationRates();
 
         _path.Add(rb.position);
-        _desiredDirection = transform.forward;
+        _lookDirection = transform.forward;
 
         _sqrRange = range * range;
         _sqrChaseRange = chaseRange * chaseRange;
@@ -121,10 +121,14 @@ public abstract class Unit : Entity
         Animator = GetComponentInChildren<Animator>(true);
     }
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         _manager = PathfindingManager.Instance;
         _globalUnitSettings = GlobalUnitSettings.Instance;
+
+        Debug.Log(_globalUnitSettings);
 
         BeginInvokeRepeating();
     }
@@ -195,26 +199,24 @@ public abstract class Unit : Entity
         if (_entityTarget == null)
         {
             _entityTarget = DetermineEntityTarget();
+
+            if (_entityTarget != null)
+            {
+                FoundEntityTarget();
+            }
         }
 
         Vector3 pos;
 
-        if (_entityTarget != null)
+        Vector3? targetPos = DetermineTargetPos();
+
+        if (targetPos.HasValue)
         {
-            pos = _entityTarget.transform.position;
+            pos = targetPos.Value;
         }
         else
         {
-            Vector3? targetPos = DetermineTarget();
-
-            if (targetPos.HasValue)
-            {
-                pos = targetPos.Value;
-            }
-            else
-            {
-                pos = transform.position;
-            }
+            pos = transform.position;
         }
 
         if (pos != _targetPos)
@@ -236,6 +238,8 @@ public abstract class Unit : Entity
             Attack();
         }
     }
+
+    protected abstract void FoundEntityTarget();
 
     public bool HasLineOfSight(Vector3 pos) => HasLineOfSight(pos, out _);
     public bool HasLineOfSight(Vector3 pos, out float dist, LayerMask? layerOverride = null)
@@ -318,13 +322,21 @@ public abstract class Unit : Entity
         return result;
     }
 
-    protected abstract Vector3? DetermineTarget();
+    protected virtual Vector3? DetermineTargetPos()
+    {
+        return _entityTarget != null ? _entityTarget.transform.position : null;
+    }
+
+    protected virtual bool TargetPosIsForced()
+    {
+        return false;
+    }
 
     protected virtual void LateUpdate()
     {
         float delta = turnSpeed * Time.deltaTime;
 
-        float angle = Mathf.Atan2(_desiredDirection.z, _desiredDirection.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(_lookDirection.z, _lookDirection.x) * Mathf.Rad2Deg;
 
         _currentAngle = Mathf.LerpAngle(_currentAngle, angle, delta);
 
@@ -347,7 +359,14 @@ public abstract class Unit : Entity
             _entityTargetInRange = false;
         }
 
-        _reachedTarget = _entityTargetInRange || sqrDist <= _globalUnitSettings.ReachedDestinationDist;
+        _reachedTarget = (!TargetPosIsForced() && _entityTargetInRange) || sqrDist <= _globalUnitSettings.ReachedDestinationDist;
+
+        if (_entityTargetInRange)
+        {
+            _lookDirection = _entityTarget.transform.position - transform.position;
+            _lookDirection.y = 0;
+            _lookDirection.Normalize();
+        }
 
         /*
         _currentDirection = Vector3.Slerp(_currentDirection, _desiredDirection, turnSpeed * Time.deltaTime);
@@ -361,9 +380,11 @@ public abstract class Unit : Entity
     {
         _attackCooldown = attackDelay;
 
-        UnitAttack spawnedAttack = Instantiate(attack, transform.position, transform.rotation, transform);
+        UnitAttack spawnedAttack = Instantiate(attack, transform.position, transform.rotation);
         spawnedAttack.User = this;
         spawnedAttack.Target = _entityTarget;
+
+        spawnedAttack.SubscribeToDeath();
     }
 
     private async void Pathfind(CancellationToken token)
@@ -398,6 +419,7 @@ public abstract class Unit : Entity
     {
         float targetVelocity;
         Vector3 moveTo;
+        Vector3 moveDirection;
 
         if (CanMove)
         {
@@ -497,13 +519,20 @@ public abstract class Unit : Entity
                 moveTo = _targetPos;
             }
 
-            _desiredDirection = moveTo - rb.position;
-            _desiredDirection.y = 0;
-            _desiredDirection.Normalize();
+            moveDirection = moveTo - rb.position;
+            moveDirection.y = 0;
+            moveDirection.Normalize();
+
+            if (!_entityTargetInRange)
+            {
+                _lookDirection = moveDirection;
+            }
         }
         else
         {
             targetVelocity = 0;
+
+            moveDirection = _lookDirection;
         }
 
         float acceleration = GetAccelerationRate(_currentVelocity, targetVelocity, _accelerationRate, _decelerationRate);
@@ -511,8 +540,8 @@ public abstract class Unit : Entity
 
         Vector3 velocity = rb.linearVelocity;
 
-        velocity.x = _desiredDirection.x * _currentVelocity;
-        velocity.z = _desiredDirection.z * _currentVelocity;
+        velocity.x = moveDirection.x * _currentVelocity;
+        velocity.z = moveDirection.z * _currentVelocity;
 
         rb.linearVelocity = velocity + _knockbackForce;
 
@@ -569,7 +598,6 @@ public abstract class Unit : Entity
         if (name == "Walk" && walkParticles != null)
         {
             walkParticles.Play();
-            Debug.Log("WALK!!");
         }
 
         OnAnimEvent?.Invoke(name);
