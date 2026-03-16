@@ -6,7 +6,7 @@ public class Menu : MonoBehaviour
 {
     [SerializeField] GameObject panel;
 
-    private bool isOpen;
+    public bool isOpen;
 
     private AudioSource source;
     public AudioClip openMenu;
