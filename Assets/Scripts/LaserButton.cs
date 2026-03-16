@@ -28,10 +28,7 @@ public class LaserButton : MonoBehaviour, IClickable
         Debug.Log("LaserButton deselected");
     }
 
-    private void Update()
-    {
-        Debug.Log("Position of left controller" + OVRInput.GetControllerPositionTracked(OVRInput.Controller.LTouch));
-    }
+
 
     public void OnSelect()
     {
