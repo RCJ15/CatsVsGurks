@@ -44,6 +44,8 @@ public class TutorialText : MonoBehaviour
             {
             yield return new WaitForSeconds(0.2f);
 
+            T3.SetActive(false);
+
             // GAME BEGINS
             FindAnyObjectByType<EnemySpawner>().Begin();
 
