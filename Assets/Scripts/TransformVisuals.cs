@@ -20,6 +20,7 @@ public class TransformVisuals : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (_parent == null) return;
         if (VisualsPlane.Instance == null) return;
         if (SimulationPlane.Instance == null) return;
 

@@ -19,14 +19,19 @@ public class HiveMQSubscriber : MonoBehaviour
     public string topic_pot = "ludvig/pot";
 
     [Header("Publish Topic")]
-    public string topic_publish = "ludvig/output";
+    public string topic_publish = "ludvig/beamMode";
 
     private IMqttClient client;
     private MqttFactory factory;
 
+    public OrbitalCannonController orbitalCannonController;
+    public OrbitalCannon orbitalCannon;
     public Menu menu;
 
     private bool toggleMenuRequested = false;
+    private bool cannonFire = false;
+
+    private string lastSelected = "";
 
     async void Start()
     {
@@ -103,37 +108,55 @@ public class HiveMQSubscriber : MonoBehaviour
     {
         payload = payload.Trim();
 
-        if (topic == topic_beamMode)
+        if (topic == topic_button)
         {
-            Debug.Log("BeamMode signal: " + payload);
-
-            if (payload == "1")
-            {
-                Debug.Log("Beam mode = 1");
-            }
-            else if (payload == "2")
-            {
-                Debug.Log("Beam mode = 2");
-            }
-        }
-        else if (topic == topic_button)
-        {
-
             if (payload == "1")
             {
                 toggleMenuRequested = true;
             }
+            if (payload == "2")
+            {
+                if (orbitalCannon != null)
+                {
+                    cannonFire = orbitalCannon.TryFire();
+                }
+                else
+                {
+                    Debug.LogError("OrbitalCannon reference is not assigned in Inspector!");
+                }
+                if (cannonFire)
+                {
+                    PublishMessage(cannonFire.ToString());
+                    orbitalCannon.FireSequence();
+                }
+            }
+        }
+        if (topic == topic_beamMode && (payload == "true" || payload == "1"))
+        {
+            Debug.Log("Beam mode activated via MQTT");
+            if (orbitalCannonController != null)
+                orbitalCannonController.ActivateCannon();
         }
         else if (topic == topic_selected)
         {
-
-            if (payload == "3")
+            if (payload != lastSelected)
             {
+                if (orbitalCannonController != null)
+                {
+                    int button = int.Parse(payload); // 2,3,4
+                    orbitalCannonController.InputButton(button);
+                }
+                Debug.Log("Selection changed from " + lastSelected + " to " + payload);
+                lastSelected = payload;
 
-            }
-            else if (payload == "4")
-            {
+                if (payload == "3")
+                {
 
+                }
+                else if (payload == "4")
+                {
+
+                }
             }
         }
         else if (topic == topic_pot)
