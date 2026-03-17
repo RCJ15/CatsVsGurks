@@ -127,6 +127,7 @@ public class HiveMQSubscriber : MonoBehaviour
                 if (orbitalCannon != null)
                 {
                     cannonFire = orbitalCannon.TryFire();
+                    PublishMessage(cannonFire.ToString());
                 }
                 else
                 {
@@ -134,7 +135,6 @@ public class HiveMQSubscriber : MonoBehaviour
                 }
                 if (cannonFire)
                 {
-                    PublishMessage(cannonFire.ToString());
                     orbitalCannon.FireSequence();
                 }
             }
