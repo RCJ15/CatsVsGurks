@@ -49,8 +49,8 @@ MonoBehaviour:
   waves:
   - enemies:
     - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
-    value: 20
-    timeBtwSpawns: {x: 1, y: 5}
+    value: 10
+    timeBtwSpawns: {x: 4, y: 12}
     startDelay: 5
   - enemies:
     - {fileID: 4158770303672267350, guid: 92bee4303736830429b11f78facc15f3, type: 3}
