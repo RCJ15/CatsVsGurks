@@ -9,6 +9,7 @@ public class HUD : MonoBehaviour
 {
     public static HUD Instance { get; private set; }
 
+    [SerializeField] private Transform canvasObj;
     [SerializeField] private TMP_Text moneyText;
     private string _moneyFormat;
     private float _moneyTextStartFontSize;
@@ -71,6 +72,11 @@ public class HUD : MonoBehaviour
 
     private void Update()
     {
+        transform.position = HeadPosition.Pos;
+        transform.rotation = Quaternion.Euler(0, HeadPosition.EulerAngles.y, 0);
+
+        canvasObj.transform.forward = canvasObj.transform.position - HeadPosition.Pos;
+
         int money;
 
         if (_moneyPosition <= 0)
