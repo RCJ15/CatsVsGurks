@@ -8,7 +8,6 @@ public class TowerShop : MonoBehaviour
     public static bool Open => Instance == null ? false : Instance._open;
 
     private bool _open;
-    [SerializeField] private Camera cam;
     [SerializeField] private float rotationDelta;
 
     [SerializeField] private OVRInput.RawButton toggleShopInput;
@@ -18,9 +17,13 @@ public class TowerShop : MonoBehaviour
     private Quaternion _rotation;
     private LaserPointer _laserPointer;
 
+    private TutorialText _text;
+
     private void Awake()
     {
         Instance = this;
+
+        _text = FindAnyObjectByType<TutorialText>();
     }
 
     private void Start()
@@ -36,7 +39,7 @@ public class TowerShop : MonoBehaviour
 
     private void Update()
     {
-        if (OVRInput.GetDown(toggleShopInput) && _laserPointer.TowerPreview == null
+        if (OVRInput.GetDown(toggleShopInput) && _laserPointer.TowerPreview == null && _text.currentTextIndex >= 4
 
 #if UNITY_EDITOR
             || UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame
@@ -58,8 +61,8 @@ public class TowerShop : MonoBehaviour
 
         if (_open)
         {
-            _position = cam.transform.position;
-            _rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
+            _position = HeadPosition.Pos;
+            _rotation = Quaternion.Euler(0, HeadPosition.EulerAngles.y, 0);
         }
 
         // On Open

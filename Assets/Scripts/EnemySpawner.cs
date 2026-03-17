@@ -51,23 +51,30 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 GetRandomPos()
     {
-        /*
-        bool isXAxis = Random.Range(0, 2) == 1;
-        bool invert = Random.Range(0, 2) == 1;
+        bool CoinFlip() => Random.Range(0, 2) == 1;
+
+        bool isXAxis = CoinFlip();
+        bool invert = CoinFlip();
+
+        float x;
+        float z;
 
         if (isXAxis)
         {
-            float x = 
+            x = Random.Range(-max.x, max.x) / 2f;
+
+            z = Random.Range(min.y, max.y) * (invert ? -1 : 1) / 2f;
         }
         else
         {
+            z = Random.Range(-max.y, max.y) / 2f;
 
+            x = Random.Range(min.x, max.x) * (invert ? -1 : 1) / 2f;
         }
 
-        Vector3 result = Vector3.zero;
+        Vector3 result = new Vector3(x, 0, z);
 
-        */
-        return Vector3.zero;
+        return result;
     }
     
     public void StartWave(int wave)

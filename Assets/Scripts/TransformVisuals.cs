@@ -10,6 +10,8 @@ public class TransformVisuals : MonoBehaviour
     private Vector3 _startScale;
 
     private ParticleSystem[] _particles;
+    private int _particlesLength;
+    private float[] _particlesGravity;
     private TrailRenderer[] _trailRenderers;
     private int _trailRenderersLength;
     private float[] _trailRenderersSizes;
@@ -24,6 +26,13 @@ public class TransformVisuals : MonoBehaviour
         _transform.SetParent(null, true);
 
         _particles = GetComponentsInChildren<ParticleSystem>(true);
+        _particlesLength = _particles.Length;
+        _particlesGravity = new float[_particlesLength];
+
+        for (int i = 0; i < _particlesLength; i++)
+        {
+            _particlesGravity[i] = _particles[i].main.gravityModifierMultiplier;
+        }
 
         _trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
         _trailRenderersLength = _trailRenderers.Length;
@@ -51,12 +60,17 @@ public class TransformVisuals : MonoBehaviour
         Vector3 scale = VisualsPlane.TransformScale(Vector3.Scale(_parent.lossyScale, _startScale));
         _transform.localScale = scale;
 
-        foreach (ParticleSystem particles in _particles)
-        {
-            particles.transform.localScale = scale;
-        }
-
         float scale1D = Mathf.Max(scale.x, scale.y, scale.z);
+
+        for (int i = 0; i < _particlesLength; i++)
+        {
+            ParticleSystem particles = _particles[i];
+
+            particles.transform.localScale = scale;
+
+            var main = particles.main;
+            main.gravityModifierMultiplier = _particlesGravity[i] * scale1D;
+        }
 
         for (int i = 0; i < _trailRenderersLength; i++)
         {
