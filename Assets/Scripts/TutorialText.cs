@@ -12,7 +12,7 @@ public class TutorialText : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         Vector3 forward = cameraTransform.forward.normalized;
-        Vector3 targetPosition = cameraTransform.position + forward * offset + new Vector3(0, -0.2f, 0);
+        Vector3 targetPosition = cameraTransform.position + forward * offset + new Vector3(0, 0, 0);
         Quaternion targetRotation = Quaternion.LookRotation(forward);
 
         StartCoroutine(AnimateMenu(targetPosition, targetRotation));

@@ -13,7 +13,7 @@ public class Menu : MonoBehaviour
     //public AudioClip closeMenu;
 
     public Transform cameraTransform;
-    public float offset = 2f;
+    [SerializeField] private float offset = 2f;
 
     private void Start()
     {
@@ -55,7 +55,7 @@ public class Menu : MonoBehaviour
             forward.Normalize();
 
             Vector3 targetPosition = cameraTransform.position + forward * offset;
-            targetPosition += new Vector3(0, -0.2f, 0);
+            targetPosition += new Vector3(0, -0.5f, 0);
 
             Quaternion targetRotation = Quaternion.LookRotation(forward);
 

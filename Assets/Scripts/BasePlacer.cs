@@ -28,7 +28,7 @@ public class BasePlacer : MonoBehaviour
     {
         Debug.Log(targetObject.transform.position);
 
-        if (OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
+        if (justStarted && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {
             justStarted = false;
             placeBace();
