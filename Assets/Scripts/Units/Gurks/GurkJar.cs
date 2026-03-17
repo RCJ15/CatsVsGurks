@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class GurkJar : Gurk
 {
-    [SerializeField] private Gurk spawnOnDeath;
-
     protected override void Attack()
     {
         base.Attack();
@@ -11,5 +9,8 @@ public class GurkJar : Gurk
         Die();
     }
 
-
+    public override void Die()
+    {
+        base.Die();
+    }
 }

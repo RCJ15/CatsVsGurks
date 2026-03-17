@@ -11,6 +11,7 @@ public class RangedAttack : UnitAttack
     [SerializeField] private float minimumTravelTime;
     [SerializeField] private float heightMultiplier = 0.5f;
     [SerializeField] private float minimumHeight;
+    [SerializeField] private GameObject spawnOnDeath;
 
     private float _distance;
     private float _t;
@@ -92,6 +93,12 @@ public class RangedAttack : UnitAttack
             _enableHitbox = true;
             _enableTime = colliderActiveTime;
             EnableCollider();
+
+            if (spawnOnDeath != null)
+            {
+                GameObject obj = Instantiate(spawnOnDeath, projectile.position, Quaternion.identity);
+                Destroy(obj, 10);
+            }
 
             visuals.gameObject.SetActive(false);
             return;

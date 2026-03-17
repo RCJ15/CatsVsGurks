@@ -61,9 +61,8 @@ public class LaserPointer : MonoBehaviour
     [Space]
     [SerializeField] private OVRInput.RawButton confirmRightButton;
     [SerializeField] private OVRInput.RawButton confirmLeftButton;
-
-    [Space]
-    [SerializeField] private LineRenderer laser;
+    private float _tempRestartTimer;
+    private bool _tempRestarting;
 
     [Header("Attraction")]
     [SerializeField] private float attractionRange;
@@ -71,16 +70,66 @@ public class LaserPointer : MonoBehaviour
     [SerializeField] private float timeUntilAttracted;
     [SerializeField] private float attractionDuration;
 
+    private LineRenderer[] _lasers;
+
     private void Awake()
     {
         Instance = this;
 
         SqrAttractionRange = attractionRange * attractionRange;
         SqrForcedAttractionRange = forcedAttractionRange * forcedAttractionRange;
+
+        _lasers = GetComponentsInChildren<LineRenderer>(true);
+
+        _lasers[0].enabled = false;
+        _lasers[1].enabled = false;
+        _lasers[2].enabled = false;
+        _lasers[3].enabled = false;
+
+        ChangeColorLocal(CurrentColor);
     }
 
     private void Update()
     {
+        // -- TEMP
+        if (UnityEngine.InputSystem.Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            ChangeColor(Color.Red);
+        }
+
+        if (UnityEngine.InputSystem.Keyboard.current.yKey.wasPressedThisFrame)
+        {
+            ChangeColor(Color.Yellow);
+        }
+
+        if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            ChangeColor(Color.Green);
+        }
+
+        if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
+        {
+            ChangeColor(Color.Blue);
+        }
+
+        if (OVRInput.GetDown(confirmLeftButton))
+        {
+            _tempRestarting = true;
+        }
+
+        if (OVRInput.GetUp(confirmLeftButton))
+        {
+            _tempRestarting = false;
+            _tempRestartTimer += Time.deltaTime;
+        }
+
+        if (_tempRestartTimer > 3f)
+        {
+            Debug.Log("RESTART!!!");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
+        // -- TEMP END
+
         // PRESS
         OVRInput.RawButton button = LeftHanded ? confirmLeftButton : confirmRightButton;
 
@@ -163,20 +212,24 @@ public class LaserPointer : MonoBehaviour
         if (!success)
         {
             Vector3 hitPoint = hand.position + (hand.forward * maxDistance);
-            laser.SetPosition(0, hand.position);
-            laser.SetPosition(1, hitPoint);
+            foreach (var laser in _lasers)
+            {
+                laser.SetPosition(0, hand.position);
+                laser.SetPosition(1, hitPoint);
+            }
 
             Point = SimulationPlane.TransformPoint(hitPoint);
             return;
         }
 
-        laser.enabled = true;
-
         hit = _hits[0];
         Point = hit.point;
 
-        laser.SetPosition(0, hand.position);
-        laser.SetPosition(1, VisualsPlane.TransformPoint(hit.point));
+        foreach (var laser in _lasers)
+        {
+            laser.SetPosition(0, hand.position);
+            laser.SetPosition(1, VisualsPlane.TransformPoint(hit.point));
+        }
 
         if (TowerPreview != null)
         {
@@ -199,46 +252,12 @@ public class LaserPointer : MonoBehaviour
     {
         CurrentColor = color;
 
-        UnityEngine.Color laserColor;
+        _lasers[0].enabled = false;
+        _lasers[1].enabled = false;
+        _lasers[2].enabled = false;
+        _lasers[3].enabled = false;
 
-        switch (color)
-        {
-            default:
-            case Color.Red:
-                laserColor = UnityEngine.Color.red;
-                break;
-
-            case Color.Yellow:
-                laserColor = UnityEngine.Color.yellow;
-                break;
-
-            case Color.Green:
-                laserColor = UnityEngine.Color.green;
-                break;
-
-            case Color.Blue:
-                laserColor = UnityEngine.Color.blue;
-                break;
-        }
-
-        Debug.Log("CHANGE COLOR to " + color + " | " + laserColor);
-
-        laser.startColor = laserColor;
-        laser.endColor = laserColor;
-
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-        new GradientColorKey[] {
-            new GradientColorKey(laserColor, 0.0f),
-            new GradientColorKey(laserColor, 1.0f)
-        },
-        new GradientAlphaKey[] {
-            new GradientAlphaKey(1.0f, 0.0f),
-            new GradientAlphaKey(1.0f, 1.0f)
-        }
-        );
-
-        laser.colorGradient = gradient;
+        _lasers[(int)color].enabled = true;
     }
 
     public enum Color

@@ -57,6 +57,7 @@ MonoBehaviour:
   minimumTravelTime: 0.6
   heightMultiplier: 0.15
   minimumHeight: 0.6
+  spawnOnDeath: {fileID: 3895485243708933586, guid: eca9ba2b619db4f44b155708d4b1d369, type: 3}
 --- !u!54 &3348453819914042050
 Rigidbody:
   m_ObjectHideFlags: 0

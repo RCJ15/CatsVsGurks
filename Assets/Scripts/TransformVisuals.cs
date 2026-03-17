@@ -16,6 +16,8 @@ public class TransformVisuals : MonoBehaviour
     private int _trailRenderersLength;
     private float[] _trailRenderersSizes;
 
+    [SerializeField] private bool dontModifyParticles;
+
     private void Start()
     {
         _transform = transform;
@@ -62,14 +64,17 @@ public class TransformVisuals : MonoBehaviour
 
         float scale1D = Mathf.Max(scale.x, scale.y, scale.z);
 
-        for (int i = 0; i < _particlesLength; i++)
+        if (!dontModifyParticles)
         {
-            ParticleSystem particles = _particles[i];
+            for (int i = 0; i < _particlesLength; i++)
+            {
+                ParticleSystem particles = _particles[i];
 
-            particles.transform.localScale = scale;
+                particles.transform.localScale = scale;
 
-            var main = particles.main;
-            main.gravityModifierMultiplier = _particlesGravity[i] * scale1D;
+                var main = particles.main;
+                main.gravityModifierMultiplier = _particlesGravity[i] * scale1D;
+            }
         }
 
         for (int i = 0; i < _trailRenderersLength; i++)

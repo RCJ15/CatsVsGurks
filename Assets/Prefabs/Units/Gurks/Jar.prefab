@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &2375747754019906829
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,19 +147,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2469117545517742408}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51f54047f5ab7ce46bcaffff0890b5f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d5e52e1127d72a40b41c3eee3f2e4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 2
-  hp: 20
+  hp: 5
   defense: 999
   knockbackResitance: 1
   unitName: Gurk Burk
-  speed: 1.5
+  speed: 1
   turnSpeed: 3
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
-  attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
+  attack: {fileID: 2379153592367155419, guid: dcbbe580bfcf84e4fbaed4759e566c9e, type: 3}
   damage: 35
   attackDelay: 1
   attackAnimSpeed: 1

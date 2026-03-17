@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour
 
     private Wave _currentWave;
 
-    private int _gurksRemaining;
     private float _currentValue;
     private float _spawnTimer;
 
@@ -34,7 +33,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (_currentValue <= 0)
         {
-            if (_gurksRemaining <= 0)
+            if (Gurk.GurksRemaining <= 0)
             {
                 // Start next wave
                 Debug.Log("WAVE COMPLETE");
@@ -57,9 +56,6 @@ public class EnemySpawner : MonoBehaviour
 
             // Spawn enemy
             Gurk newEnemy = Instantiate(enemy, pos, Quaternion.LookRotation(transform.position - pos, Vector3.up));
-
-            _gurksRemaining++;
-            newEnemy.OnDie += () => _gurksRemaining--;
 
             _currentValue -= enemy.WaveWeight;
         }

@@ -6,6 +6,8 @@ public class Gurk : Unit
 
     public float WaveWeight => waveWeight;
 
+    public static int GurksRemaining { get; private set; }
+
     [Space]
     [SerializeField] protected Vector2Int value = new Vector2Int(50, 100);
     [SerializeField] private float waveWeight = 1;
@@ -19,6 +21,8 @@ public class Gurk : Unit
         base.Awake();
 
         InvokeRepeating(nameof(SetRandPos), 0f, 5f);
+
+        GurksRemaining++;
     }
 
     private void SetRandPos()
@@ -59,7 +63,14 @@ public class Gurk : Unit
     {
         if (_entityTarget == null)
         {
-            return _playerBase.transform.position;
+            if (_playerBase == null)
+            {
+                _playerBase = PlayerBase.Instance;
+
+                return Vector3.zero;
+            }
+
+            return  _playerBase.transform.position;
         }
 
         return base.DetermineTargetPos();
@@ -68,6 +79,8 @@ public class Gurk : Unit
     public override void Die()
     {
         base.Die();
+
+        GurksRemaining--;
 
         // Give money to player
         Player.Money += Random.Range(value.x, value.y);
