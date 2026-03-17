@@ -174,7 +174,11 @@ public class LaserPointer : MonoBehaviour
 
         if (TowerPreview != null)
         {
-            TowerPreview.transform.position = Point;
+            TowerPreview.Position = Point;
+
+            Vector3 dir = hand.position - TowerPreview.Position;
+            dir.y = 0;
+            TowerPreview.transform.forward = dir;
         }
     }
 }
