@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class VisualsPlane : MonoBehaviour
@@ -6,11 +7,20 @@ public class VisualsPlane : MonoBehaviour
 
     public static Transform Transform { get; private set; }
 
+    [SerializeField] private Vector2 scaleRange;
+
     private void Awake()
     {
         Instance = this;
 
         Transform = transform;
+    }
+
+    private void Update()
+    {
+        float scale = Mathf.Lerp(scaleRange.x, scaleRange.y, HiveMQSubscriber.Instance.PotValue);
+
+        transform.localScale = scale * Vector3.one;
     }
 
     public static Vector3 TransformPoint(Vector3 point)
