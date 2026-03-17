@@ -4,9 +4,13 @@ using UnityEngine;
 public class RangedAttack : UnitAttack
 {
     [SerializeField] private Transform projectile;
+    [SerializeField] private Transform visuals;
     [SerializeField] private float colliderActiveTime;
-    [SerializeField] private float travelTime;
+    [SerializeField] private float projectileSpeed;
+    [SerializeField] private float minimumTravelTime;
     [SerializeField] private float heightMultiplier = 0.5f;
+    [SerializeField] private float minimumHeight;
+
     private float _distance;
     private float _t;
     private float _speed;
@@ -16,36 +20,50 @@ public class RangedAttack : UnitAttack
 
     private bool _enableHitbox;
     private float _enableTime;
+    private bool _projectileActive;
+    private Vector3 _oldPosition;
+
+    private float _travelTime;
 
     private void Start()
     {
-        _speed = 1f / travelTime;
-
-        User.CanMove = false;
-        User.SetAnimTrigger("Attack");
+        if (User == null || Target == null)
+        {
+            Die();
+            return;
+        }
 
         _distance = Vector3.Distance(User.transform.position, Target.transform.position);
 
-        // Predict future position
-        Rigidbody rb = Target.GetComponentInChildren<Rigidbody>(true);
-        _startPos = User.transform.position;
-        _targetPos = Target.transform.position;
+        _travelTime = Mathf.Max(minimumTravelTime, _distance / projectileSpeed);
 
-        if (rb != null)
-        {
-            _targetPos += rb.linearVelocity * travelTime;
-        }
+        _speed = 1f / _travelTime;
+
+        User.SetAnimTrigger("Attack");
+        User.OnAnimEvent += OnAnimEvent;
+
+        projectile.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        User.OnAnimEvent -= OnAnimEvent;
     }
 
     private void Update()
     {
+        if (!_projectileActive)
+        {
+            return;
+        }
+
         if (_enableHitbox)
         {
             _enableTime -= Time.deltaTime;
 
             if (_enableTime <= 0)
             {
-                Destroy(gameObject);
+                Die();
             }
 
             return;
@@ -55,11 +73,16 @@ public class RangedAttack : UnitAttack
         float z = Mathf.Lerp(_startPos.z, _targetPos.z, _t);
 
         float y = 
-            Mathf.Lerp(_startPos.z, _targetPos.y, _t) 
+            Mathf.Lerp(_startPos.y, _targetPos.y, _t) 
             + 
-            (Mathf.Sin(Mathf.Lerp(0, 180 * Mathf.Deg2Rad, _t)) * _distance * heightMultiplier);
+            (Mathf.Sin(Mathf.Lerp(0, 180 * Mathf.Deg2Rad, _t)) * Mathf.Max(minimumHeight, _distance * heightMultiplier));
 
-        projectile.position = new(x, y, z);
+        Vector3 newPos = new(x, y, z);
+
+        visuals.transform.forward = newPos - _oldPosition;
+        _oldPosition = newPos;
+
+        projectile.position = newPos;
 
         _t += Time.deltaTime * _speed;
 
@@ -69,55 +92,44 @@ public class RangedAttack : UnitAttack
             _enableTime = colliderActiveTime;
             EnableCollider();
 
-            projectile.gameObject.SetActive(false);
+            visuals.gameObject.SetActive(false);
             return;
         }
     }
 
-    /*
-    private ThrowData GetPredictedPositionThrowData(ThrowData DirectThrowData)
+    private void OnAnimEvent(string name)
     {
-        Vector3 throwVelocity = DirectThrowData.ThrowVelocity;
-        throwVelocity.y = 0;
-        float time = DirectThrowData.DeltaXZ / throwVelocity.magnitude;
-        Vector3 playerMovement;
+        if (name == "Attack")
+        {
+            User.OnAnimEvent -= OnAnimEvent;
 
-        if (MovementPredictionMode == PredictionMode.CurrentVelocity)
-        {
-            playerMovement = PlayerCharacterController.velocity * time;
-        }
-        else
-        {
-            Vector3[] positions = HistoricalPositions.ToArray();
-            Vector3 averageVelocity = Vector3.zero;
-            for (int i = 1; i < positions.Length; i++)
+            if (Target == null)
             {
-                averageVelocity += (positions[i] - positions[i - 1]) / HistoricalPositionInterval;
+                Die();
+                return;
             }
-            averageVelocity /= HistoricalTime * HistoricalResolution;
-            playerMovement = averageVelocity;
 
+            UnsubscribeToDeath();
+
+            _projectileActive = true;
+            projectile.gameObject.SetActive(true);
+
+            // Predict future position
+            Rigidbody rb = Target.GetComponentInChildren<Rigidbody>(true);
+            _startPos = User.transform.position;
+            _targetPos = Target.transform.position;
+
+            _oldPosition = _startPos;
+
+            if (rb != null)
+            {
+                _targetPos += rb.linearVelocity * _travelTime;
+            }
         }
-
-        Vector3 newTargetPosition = new Vector3(
-            Target.position.x + PlayerCharacterController.center.x + playerMovement.x,
-            Target.position.y + PlayerCharacterController.center.y + playerMovement.y,
-            Target.position.z + PlayerCharacterController.center.x + playerMovement.z
-        );
-
-        // Option Calculate again the trajectory based on target position
-        ThrowData predictiveThrowData = CalculateThrowData(
-            newTargetPosition, 
-            AttackProjectile.position
-        );
-
-        predictiveThrowData.ThrowVelocity = Vector3.ClampMagnitude(
-            predictiveThrowData.ThrowVelocity, 
-            MaxThrowForce
-        );
-
-        return predictiveThrowData;
     }
 
-    */
+    protected override Vector3 KnockbackPoint()
+    {
+        return projectile.position;
+    }
 }

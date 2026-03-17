@@ -96,27 +96,6 @@ public class FollowPointer : MonoBehaviour
             Debug.Log("Trigger Pressed");
             ShowRay(position, forward);
         }
-        else if (OVRInput.GetDown(OVRInput.RawButton.A) || OVRInput.GetDown(OVRInput.RawButton.B))
-        {
-            tempDeleteLaterPls(position, forward);
-        }
-    }
-
-    private void tempDeleteLaterPls(Vector3 origin, Vector3 direction)
-    {
-        if (lineRenderer == null || innerLineRenderer == null)
-            return;
-
-        Ray ray = new Ray(origin, direction);
-        RaycastHit hit;
-        Vector3 endPoint = origin + direction * maxDistance;
-
-        if (Physics.Raycast(ray, out hit, maxDistance, _unitSettings.ObstacleLayer))
-        {
-            endPoint = hit.point;
-
-            FindFirstObjectByType<TowerPlaceButton>().tempPlaceTower(endPoint);
-        }
     }
 
     private void ShowRay(Vector3 origin, Vector3 direction)

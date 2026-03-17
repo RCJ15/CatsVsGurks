@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class TransformVisuals : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class TransformVisuals : MonoBehaviour
     private Vector3 _offset;
     private Vector3 _startScale;
 
+    private ParticleSystem[] _particles;
+
     private void Start()
     {
         _transform = transform;
@@ -16,6 +19,8 @@ public class TransformVisuals : MonoBehaviour
         _startScale = _transform.localScale;
 
         _transform.SetParent(null, true);
+
+        _particles = GetComponentsInChildren<ParticleSystem>(true);
     }
 
     private void LateUpdate()
@@ -31,6 +36,12 @@ public class TransformVisuals : MonoBehaviour
 
         _transform.position = VisualsPlane.TransformPoint(_parent.position + _offset);
         _transform.rotation = VisualsPlane.TransformRotation(_parent.forward, _parent.up);
-        _transform.localScale = VisualsPlane.TransformScale(Vector3.Scale(_parent.lossyScale, _startScale));
+        Vector3 scale = VisualsPlane.TransformScale(Vector3.Scale(_parent.lossyScale, _startScale));
+        _transform.localScale = scale;
+
+        foreach (ParticleSystem particles in _particles)
+        {
+            particles.transform.localScale = scale;
+        }
     }
 }
