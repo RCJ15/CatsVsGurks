@@ -12,19 +12,33 @@ public class EnemySpawner : MonoBehaviour
 
     private Wave _currentWave;
 
+    private int _gurksRemaining;
     private float _currentValue;
     private float _spawnTimer;
 
+    private bool _isPlaying;
+
     private void Start()
     {
-        // Start wave 1 test
-        StartWave(0);
+        // TEMP
+        Debug.LogWarning("DELETE THIS");
+        Begin();
     }
 
     private void Update()
     {
+        if (!_isPlaying)
+        {
+            return;
+        }
+
         if (_currentValue <= 0)
         {
+            if (_gurksRemaining <= 0)
+            {
+                // Start next wave
+                Debug.Log("WAVE COMPLETE");
+            }
             return;
         }
 
@@ -39,7 +53,10 @@ public class EnemySpawner : MonoBehaviour
             Vector3 pos = GetRandomPos();
 
             // Spawn enemy
-            Instantiate(enemy, pos, Quaternion.LookRotation(transform.position - pos, Vector3.up));
+            Gurk newEnemy = Instantiate(enemy, pos, Quaternion.LookRotation(transform.position - pos, Vector3.up));
+
+            _gurksRemaining++;
+            newEnemy.OnDie += () => _gurksRemaining--;
 
             _currentValue -= enemy.WaveWeight;
         }
@@ -76,9 +93,16 @@ public class EnemySpawner : MonoBehaviour
 
         return result;
     }
-    
+
+    public void Begin()
+    {
+        _isPlaying = true;
+        StartWave(0);
+    }
+
     public void StartWave(int wave)
     {
+        Debug.Log("STARTING WAVE " + wave);
         _currentWave = waves[wave];
 
         _currentValue = _currentWave.Value;

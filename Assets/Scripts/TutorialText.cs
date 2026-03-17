@@ -43,6 +43,10 @@ public class TutorialText : MonoBehaviour
         else
             {
             yield return new WaitForSeconds(0.2f);
+
+            // GAME BEGINS
+            FindAnyObjectByType<EnemySpawner>().Begin();
+
             gameObject.SetActive(false);
         }
         currentTextIndex++;
