@@ -1,13 +1,14 @@
-using Meta.WitAi.CallbackHandlers;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gurk : Unit
 {
     public override Team Team => Team.Enemy;
 
+    public float WaveWeight => waveWeight;
+
     [Space]
     [SerializeField] protected Vector2Int value = new Vector2Int(50, 100);
+    [SerializeField] private float waveWeight = 1;
 
     private PlayerBase _playerBase;
 
@@ -52,6 +53,16 @@ public class Gurk : Unit
     protected override void FoundEntityTarget()
     {
 
+    }
+
+    protected override Vector3? DetermineTargetPos()
+    {
+        if (_entityTarget == null)
+        {
+            return _playerBase.transform.position;
+        }
+
+        return base.DetermineTargetPos();
     }
 
     public override void Die()

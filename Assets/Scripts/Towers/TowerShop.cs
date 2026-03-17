@@ -5,6 +5,8 @@ public class TowerShop : MonoBehaviour
 {
     public static TowerShop Instance { get; private set; }
 
+    public static bool Open => Instance == null ? false : Instance._open;
+
     private bool _open;
     [SerializeField] private Camera cam;
     [SerializeField] private float rotationDelta;
@@ -14,6 +16,7 @@ public class TowerShop : MonoBehaviour
     private BuyTowerButton[] _buttons;
     private Vector3 _position;
     private Quaternion _rotation;
+    private LaserPointer _laserPointer;
 
     private void Awake()
     {
@@ -22,6 +25,7 @@ public class TowerShop : MonoBehaviour
 
     private void Start()
     {
+        _laserPointer = LaserPointer.Instance;
         _buttons = GetComponentsInChildren<BuyTowerButton>(true);
 
         foreach (var button in _buttons)
@@ -32,7 +36,7 @@ public class TowerShop : MonoBehaviour
 
     private void Update()
     {
-        if (OVRInput.GetDown(toggleShopInput)
+        if (OVRInput.GetDown(toggleShopInput) && _laserPointer.TowerPreview == null
 
 #if UNITY_EDITOR
             || UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame

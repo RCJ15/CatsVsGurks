@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
   col: {fileID: 385147213511364527}
   friendlyFire: 0
-  knockbackForce: 15
+  knockbackForce: 12.5
   colliderActiveTime: 0.15
 --- !u!54 &7200882802739064076
 Rigidbody:

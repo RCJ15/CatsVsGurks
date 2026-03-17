@@ -148,6 +148,7 @@ MonoBehaviour:
   col: {fileID: 9022308312882377037}
   friendlyFire: 0
   knockbackForce: 12
+  startOffset: {x: 0, y: 0.7, z: 0}
   projectile: {fileID: 6218270877905568275}
   visuals: {fileID: 974999470794383618}
   colliderActiveTime: 0.15
@@ -328,7 +329,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.5
+  m_Time: 0.3
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

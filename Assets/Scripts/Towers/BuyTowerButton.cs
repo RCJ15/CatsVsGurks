@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class BuyTowerButton : MonoBehaviour, IClickable
@@ -10,6 +11,7 @@ public class BuyTowerButton : MonoBehaviour, IClickable
     private Collider _collider;
     [SerializeField] private Transform visuals;
     [SerializeField] private SpriteRenderer sprite;
+    [SerializeField] private TMP_Text cost;
     [SerializeField] private CanvasGroup text;
 
     [Space]
@@ -60,6 +62,8 @@ public class BuyTowerButton : MonoBehaviour, IClickable
     private void Awake()
     {
         _collider = GetComponentInChildren<Collider>(true);
+
+        cost.text = string.Format(cost.text, tower.Cost);
     }
 
     private void Start()

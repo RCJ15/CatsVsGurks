@@ -51,7 +51,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5111456920169411840
 GameObject:
@@ -100,7 +100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
   col: {fileID: 2996741619435406927}
-  knockbackForce: 10
+  friendlyFire: 0
+  knockbackForce: 8
   colliderActiveTime: 0.15
 --- !u!54 &5995348641778064227
 Rigidbody:

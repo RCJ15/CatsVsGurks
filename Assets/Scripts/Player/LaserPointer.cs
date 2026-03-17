@@ -11,6 +11,8 @@ public class LaserPointer : MonoBehaviour
 
     public static Vector3 Point { get; private set; }
 
+    public static Color CurrentColor { get; private set; } = Color.Red;
+
     public static ClickableObject CurrentClickable
     {
         get => _currentClickable;
@@ -180,5 +182,49 @@ public class LaserPointer : MonoBehaviour
             dir.y = 0;
             TowerPreview.transform.forward = dir;
         }
+    }
+
+    public static void ChangeColor(Color color)
+    {
+        CurrentColor = color;
+
+        Instance.ChangeColorLocal(color);
+    }
+
+    private void ChangeColorLocal(Color color)
+    {
+        CurrentColor = color;
+
+        UnityEngine.Color laserColor;
+
+        switch (color)
+        {
+            default:
+            case Color.Red:
+                laserColor = UnityEngine.Color.red;
+                break;
+
+            case Color.Yellow:
+                laserColor = UnityEngine.Color.yellow;
+                break;
+
+            case Color.Green:
+                laserColor = UnityEngine.Color.green;
+                break;
+
+            case Color.Blue:
+                laserColor = UnityEngine.Color.blue;
+                break;
+        }
+
+        laser.startColor = laserColor;
+    }
+
+    public enum Color
+    {
+        Red,
+        Yellow,
+        Green,
+        Blue,
     }
 }

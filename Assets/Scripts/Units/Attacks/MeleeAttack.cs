@@ -14,6 +14,14 @@ public class MeleeAttack : UnitAttack
         User.OnAnimEvent += OnAnimEvent;
     }
 
+    private void Update()
+    {
+        if (User != null)
+        {
+            transform.position = User.transform.position;
+        }
+    }
+
     private void OnDestroy()
     {
         User.OnAnimEvent -= OnAnimEvent;

@@ -355,6 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuyTowerButton
   visuals: {fileID: 2795578181602220428}
   sprite: {fileID: 8303237899799994371}
+  cost: {fileID: 9046718446301727176}
   text: {fileID: 2746442826590308813}
   tower: {fileID: 6782755350740164545, guid: f4889bfe26ee31f46864af2a95263bf7, type: 3}
   towerPreview: {fileID: 1520165441317185874, guid: fa66fa4d285fa9d4b9d1c4fad5c52305, type: 3}

@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Barrack : Tower
 {
@@ -11,7 +14,11 @@ public class Barrack : Tower
     [SerializeField] protected float firstSpawnTimer;
     private float _spawnTimer;
 
-    private List<Cat> _cats = new();
+    [Space]
+    [SerializeField] private Transform visual;
+    [SerializeField] private Image timer;
+    [SerializeField] private TMP_Text text;
+
     private int _catsSpawned;
 
     protected override void Awake()
@@ -25,6 +32,7 @@ public class Barrack : Tower
     {
         if (_catsSpawned >= catLimit)
         {
+            _spawnTimer = timeBtwSpawns;
             return;
         }
 
@@ -34,8 +42,22 @@ public class Barrack : Tower
         {
             _spawnTimer = timeBtwSpawns;
 
-            _cats.Add(Instantiate(catToSpawn, spawnPoint.position, transform.rotation));
+            Cat cat = Instantiate(catToSpawn, spawnPoint.position, transform.rotation);
+            cat.OnDie += OnCatDie;
+
             _catsSpawned++;
         }
+    }
+
+    private void LateUpdate()
+    {
+        visual.transform.forward = visual.transform.position - HeadPosition.Pos;
+        timer.fillAmount = Mathf.Lerp(1, 0, _spawnTimer / timeBtwSpawns);
+        text.text = _catsSpawned.ToString() + "/" + catLimit.ToString();
+    }
+
+    private void OnCatDie()
+    {
+        _catsSpawned--;
     }
 }

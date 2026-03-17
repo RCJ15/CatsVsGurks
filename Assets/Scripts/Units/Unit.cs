@@ -1,7 +1,9 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -22,6 +24,7 @@ public abstract class Unit : Entity
     private bool _entityTargetInRange;
 
     [Space]
+    [SerializeField] private bool knockbackResitance;
     [SerializeField] private string unitName;
 
     #region Statistics
@@ -71,6 +74,7 @@ public abstract class Unit : Entity
     [SerializeField] private float damage = 25;
     [Tooltip("Seconds of delay between each attack")]
     [SerializeField] private float attackDelay = 0.5f;
+    [SerializeField] private float attackAnimSpeed = 1f;
     private float _attackCooldown;
     [Tooltip("How close/far a unit needs to be before this unit will attempt to attack")]
     [SerializeField] private float range = 1;
@@ -119,6 +123,11 @@ public abstract class Unit : Entity
         _attackCooldown = attackDelay;
 
         Animator = GetComponentInChildren<Animator>(true);
+
+        SetAnimFloat("AttackSpeed", attackAnimSpeed);
+
+        transform.localScale = Vector3.one * 0.01f;
+        transform.DOScale(Vector3.one, 0.6f).SetEase(Ease.OutBack);
     }
 
     protected override void Start()
@@ -352,7 +361,7 @@ public abstract class Unit : Entity
 
         if (_entityTarget != null)
         {
-            _entityTargetInRange = sqrDist <= _sqrRange;
+            _entityTargetInRange = sqrDist <= _sqrRange + (_entityTarget.ExtraSize * _entityTarget.ExtraSize);
         }
         else
         {
@@ -376,10 +385,15 @@ public abstract class Unit : Entity
         */
     }
 
-    protected void Attack()
+    protected virtual void Attack()
     {
         _attackCooldown = attackDelay;
 
+        SpawnAttack(attack);
+    }
+
+    protected void SpawnAttack(UnitAttack attack)
+    {
         UnitAttack spawnedAttack = Instantiate(attack, transform.position, transform.rotation);
         spawnedAttack.User = this;
         spawnedAttack.Target = _entityTarget;
@@ -556,7 +570,7 @@ public abstract class Unit : Entity
         }
     }
 
-    public override void Hurt(float damage, Unit from)
+    public override void Hurt(float damage, Entity from)
     {
         base.Hurt(damage, from);
 
@@ -566,6 +580,11 @@ public abstract class Unit : Entity
 
     public override void Knockback(float force, Vector3 from)
     {
+        if (knockbackResitance)
+        {
+            return;
+        }
+
         Vector2 direction = rb.position - from;
         direction.y = 0;
         direction.Normalize();

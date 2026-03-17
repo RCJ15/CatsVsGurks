@@ -4,6 +4,11 @@ public class Cat : Unit
 {
     public override Team Team => Team.Player;
 
+    [Space]
+    [SerializeField] private LaserPointer.Color color = LaserPointer.Color.Red;
+
+    public bool MatchingColor => color == LaserPointer.CurrentColor;
+
     private LaserPointer _laserPointer;
 
     private bool _inAttractionRange;
@@ -25,7 +30,7 @@ public class Cat : Unit
         Vector3 point = LaserPointer.Point;
 
         float sqrDist = (transform.position - point).sqrMagnitude;
-        _inAttractionRange = sqrDist <= _laserPointer.SqrAttractionRange;
+        _inAttractionRange = sqrDist <= _laserPointer.SqrAttractionRange && MatchingColor;
 
         bool forced = sqrDist <= _laserPointer.SqrForcedAttractionRange;
 
@@ -71,7 +76,7 @@ public class Cat : Unit
 
     protected override Vector3? DetermineTargetPos()
     {
-        if (_attractionDuration > 0 && _laserPointer.TowerPreview == null)
+        if (_attractionDuration > 0 && _laserPointer.TowerPreview == null && !TowerShop.Open && MatchingColor)
         {
             return LaserPointer.Point;
         }

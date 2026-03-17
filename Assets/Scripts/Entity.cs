@@ -14,6 +14,8 @@ public abstract class Entity : MonoBehaviour
 
     public Action OnDie { get; set; }
 
+    public float ExtraSize => extraSize;
+
     #region Stats
     public float MaxHP
     {
@@ -57,6 +59,8 @@ public abstract class Entity : MonoBehaviour
         set => defense = value;
     }
     #endregion
+
+    [SerializeField] private float extraSize;
 
     [Header("Health")]
     [Tooltip("Hitpoints, self explanatory")]
@@ -140,7 +144,7 @@ public abstract class Entity : MonoBehaviour
         EntityColliders.Remove(Collider);
     }
 
-    public virtual void Hurt(float damage, Unit from)
+    public virtual void Hurt(float damage, Entity from)
     {
         HP -= Mathf.Max(damage - defense, 1);
 
