@@ -71,7 +71,7 @@ public class Cat : Unit
 
     protected override Vector3? DetermineTargetPos()
     {
-        if (_attractionDuration > 0)
+        if (_attractionDuration > 0 && _laserPointer.TowerPreview == null)
         {
             return LaserPointer.Point;
         }

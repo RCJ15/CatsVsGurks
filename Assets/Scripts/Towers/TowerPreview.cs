@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class TowerPreview : MonoBehaviour
 {
-    [SerializeField] private Vector3 size;
+    public bool Valid { get; private set; }
+
+    [SerializeField] private Vector2 size;
 
     private GlobalTowerSettings _globalTowerSettings;
 
@@ -13,15 +15,21 @@ public class TowerPreview : MonoBehaviour
         _globalTowerSettings = GlobalTowerSettings.Instance;
 
         _renderers = GetComponentsInChildren<MeshRenderer>(true);
+
+        SetValid(false, true);
     }
 
     private void Update()
     {
-        
+        SetValid(Physics.CheckBox(transform.position, new Vector3(size.x, 100, size.y), transform.rotation, _globalTowerSettings.TowerPreviewLayerCheck));
     }
 
-    private void SetValid(bool valid)
+    private void SetValid(bool valid, bool forced = false)
     {
+        if (Valid == valid && !forced) return;
+
+        Valid = valid;
+
         if (valid)
         {
             SetMaterial(_globalTowerSettings.ValidPreviewMaterial);
@@ -49,6 +57,8 @@ public class TowerPreview : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
+
+        Gizmos.DrawWireCube(transform.position, new(size.x, 10, size.y));
     }
 #endif
 }

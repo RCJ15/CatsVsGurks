@@ -782,7 +782,7 @@ MonoBehaviour:
     m_Bits: 160
   hitLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   maxDistance: 1000
   rightHand: {fileID: 1594159787}
   leftHand: {fileID: 1035989988}
@@ -964,8 +964,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a9261de24489c5488b5a59831c5683c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalTowerSettings
-  validPreviewMaterial: {fileID: 0}
-  invalidPreviewMaterial: {fileID: 0}
+  towerPreviewLayerCheck:
+    serializedVersion: 2
+    m_Bits: 64
+  validPreviewMaterial: {fileID: 2100000, guid: 3cf7848432c048b48b02614e9de701f8, type: 2}
+  invalidPreviewMaterial: {fileID: 2100000, guid: 396b5a9f146aa7a48b051b7545d420dc, type: 2}
 --- !u!4 &400187391
 Transform:
   m_ObjectHideFlags: 0
@@ -1835,7 +1838,7 @@ GameObject:
   - component: {fileID: 708116822}
   - component: {fileID: 708116821}
   - component: {fileID: 708116820}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: SimulationPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2089,6 +2092,149 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &997233075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 997233079}
+  - component: {fileID: 997233078}
+  - component: {fileID: 997233077}
+  - component: {fileID: 997233076}
+  - component: {fileID: 997233080}
+  - component: {fileID: 997233081}
+  m_Layer: 7
+  m_Name: Buy Warrior Barrack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &997233076
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &997233077
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &997233078
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &997233079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.24, z: 5.74}
+  m_LocalScale: {x: 1.798, y: 1.798, z: 0.37937945}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &997233080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c65195d93465d74fa6da4d21d15f51d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuyTowerButton
+  tower: {fileID: 6782755350740164545, guid: f4889bfe26ee31f46864af2a95263bf7, type: 3}
+  towerPreview: {fileID: 1520165441317185874, guid: fa66fa4d285fa9d4b9d1c4fad5c52305, type: 3}
+--- !u!114 &997233081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997233075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aadc47f0e350e14da3085a59a63f3b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
+  col: {fileID: 997233076}
+  clickables:
+  - {fileID: 997233080}
 --- !u!1 &1035989987
 GameObject:
   m_ObjectHideFlags: 0
@@ -4666,10 +4812,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ad8c281ba4cec4da82d9a192b7c022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerPlaceButton
-  tower: {fileID: 6782755350740164545, guid: f4889bfe26ee31f46864af2a95263bf7, type: 3}
-  _button: {fileID: 0}
-  _thisPlacingTower: 0
-  _globalTowerSettings: {fileID: 0}
 --- !u!114 &2133091389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4853,3 +4995,4 @@ SceneRoots:
   - {fileID: 592430807}
   - {fileID: 1402545311}
   - {fileID: 649110458}
+  - {fileID: 997233079}

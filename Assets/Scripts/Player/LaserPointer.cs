@@ -37,7 +37,7 @@ public class LaserPointer : MonoBehaviour
     private static ClickableObject _currentClickable;
 
     public Tower TowerToPlace { get; set; }
-    public MeshRenderer TowerPreview { get; set; }
+    public TowerPreview TowerPreview { get; set; }
 
     public float AttractionRange => attractionRange;
     public float SqrAttractionRange { get; private set; }
@@ -78,18 +78,40 @@ public class LaserPointer : MonoBehaviour
     private void Update()
     {
         // PRESS
-        if (CurrentClickable != null)
-        {
-            OVRInput.RawButton button = LeftHanded ? confirmLeftButton : confirmRightButton;
+        OVRInput.RawButton button = LeftHanded ? confirmLeftButton : confirmRightButton;
 
+        if (TowerPreview != null)
+        {
             if (OVRInput.GetDown(button))
             {
-                CurrentClickable.OnClickDown();
-            }
+                if (TowerPreview.Valid)
+                {
+                    // Place tower
+                    Instantiate(TowerToPlace, TowerPreview.transform.position, TowerPreview.transform.rotation);
 
-            if (OVRInput.GetUp(button))
+                    Destroy(TowerPreview);
+                    TowerPreview = null;
+                }
+                else
+                {
+
+                }
+            }
+        }
+        else
+        {
+
+            if (CurrentClickable != null)
             {
-                CurrentClickable.OnClickUp();
+                if (OVRInput.GetDown(button))
+                {
+                    CurrentClickable.OnClickDown();
+                }
+
+                if (OVRInput.GetUp(button))
+                {
+                    CurrentClickable.OnClickUp();
+                }
             }
         }
 
@@ -149,5 +171,10 @@ public class LaserPointer : MonoBehaviour
 
         laser.SetPosition(0, hand.position);
         laser.SetPosition(1, VisualsPlane.TransformPoint(hit.point));
+
+        if (TowerPreview != null)
+        {
+            TowerPreview.transform.position = Point;
+        }
     }
 }
