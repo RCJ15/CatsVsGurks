@@ -89,12 +89,12 @@ public class LaserPointer : MonoBehaviour
                     // Place tower
                     Instantiate(TowerToPlace, TowerPreview.transform.position, TowerPreview.transform.rotation);
 
-                    Destroy(TowerPreview);
+                    Destroy(TowerPreview.gameObject);
                     TowerPreview = null;
                 }
                 else
                 {
-
+                    // Not valid placement
                 }
             }
         }
@@ -176,7 +176,7 @@ public class LaserPointer : MonoBehaviour
         {
             TowerPreview.Position = Point;
 
-            Vector3 dir = hand.position - TowerPreview.Position;
+            Vector3 dir = SimulationPlane.TransformPoint(hand.position) - TowerPreview.Position;
             dir.y = 0;
             TowerPreview.transform.forward = dir;
         }

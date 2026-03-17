@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2431833439989196288
+--- !u!1 &301013399595527176
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,62 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 648512773365055778}
+  - component: {fileID: 7090596693526199652}
+  - component: {fileID: 7215492039237309735}
+  m_Layer: 6
+  m_Name: ArcherBarrack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7090596693526199652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301013399595527176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.20041, y: 0, z: -7.87546}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7541442812526553431}
+  - {fileID: 5785216694042367310}
+  - {fileID: 7082944873081955318}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7215492039237309735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301013399595527176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e997b9a33c60fd49b10b87a22d2c6dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Barrack
+  hp: 200
+  defense: 0
+  cost: 350
+  spawnPoint: {fileID: 7082944873081955318}
+  catToSpawn: {fileID: 8548241625530612159, guid: aabbac7b11ab3f34c92b6d0a5b1be333, type: 3}
+  catLimit: 5
+  timeBtwSpawns: 15
+  firstSpawnTimer: 5
+--- !u!1 &480251650655932895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7082944873081955318}
   m_Layer: 6
   m_Name: Spawn point
   m_TagString: Untagged
@@ -16,22 +71,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &648512773365055778
+--- !u!4 &7082944873081955318
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2431833439989196288}
+  m_GameObject: {fileID: 480251650655932895}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 3.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7477781690198116574}
+  m_Father: {fileID: 7090596693526199652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6372654325425110490
+--- !u!1 &1312049525789332008
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,8 +94,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2716627150784066961}
-  - component: {fileID: 5394077076443323904}
+  - component: {fileID: 7541442812526553431}
+  - component: {fileID: 2786603901974295123}
   m_Layer: 6
   m_Name: Visuals
   m_TagString: Untagged
@@ -48,35 +103,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2716627150784066961
+--- !u!4 &7541442812526553431
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372654325425110490}
+  m_GameObject: {fileID: 1312049525789332008}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7410907522432655062}
-  m_Father: {fileID: 7477781690198116574}
+  - {fileID: 6175587728775389666}
+  m_Father: {fileID: 7090596693526199652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5394077076443323904
+--- !u!114 &2786603901974295123
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372654325425110490}
+  m_GameObject: {fileID: 1312049525789332008}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
---- !u!1 &6720566093713988351
+--- !u!1 &2942510543855019499
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,9 +139,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3210430098197597190}
-  - component: {fileID: 8493982011145930727}
-  - component: {fileID: 1325872937964714283}
+  - component: {fileID: 5785216694042367310}
+  - component: {fileID: 788659134485640005}
+  - component: {fileID: 9083089815088677114}
   m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
@@ -94,28 +149,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3210430098197597190
+--- !u!4 &5785216694042367310
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6720566093713988351}
+  m_GameObject: {fileID: 2942510543855019499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 20, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7477781690198116574}
+  m_Father: {fileID: 7090596693526199652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8493982011145930727
+--- !u!65 &788659134485640005
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6720566093713988351}
+  m_GameObject: {fileID: 2942510543855019499}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -130,13 +185,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1325872937964714283
+--- !u!114 &9083089815088677114
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6720566093713988351}
+  m_GameObject: {fileID: 2942510543855019499}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96ecb098162ae7942933028de1b13144, type: 3}
@@ -147,120 +202,65 @@ MonoBehaviour:
   radius: 0.5
   block: 1
   cost: 0
---- !u!1 &6827759911357000480
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7477781690198116574}
-  - component: {fileID: 6782755350740164545}
-  m_Layer: 6
-  m_Name: WarriorBarrack
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7477781690198116574
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6827759911357000480}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2716627150784066961}
-  - {fileID: 3210430098197597190}
-  - {fileID: 648512773365055778}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6782755350740164545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6827759911357000480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e997b9a33c60fd49b10b87a22d2c6dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Barrack
-  hp: 200
-  defense: 0
-  cost: 250
-  spawnPoint: {fileID: 648512773365055778}
-  catToSpawn: {fileID: 7603198658870231697, guid: 1234f856aaae7684baddcfc676969e40, type: 3}
-  catLimit: 5
-  timeBtwSpawns: 10
-  firstSpawnTimer: 3
---- !u!1001 &7964009208459100405
+--- !u!1001 &1501617629833380011
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2716627150784066961}
+    m_TransformParent: {fileID: 7541442812526553431}
     m_Modifications:
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 3191301291744109603, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
+      propertyPath: m_Name
+      value: ArcherBarrackModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.25
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
-    - target: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
+    - target: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7311034918473669449, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
-      propertyPath: m_Name
-      value: WarriorBarrackModel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
---- !u!4 &7410907522432655062 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
+--- !u!4 &6175587728775389666 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 602652281400942115, guid: bc15559227d36d54f98f962d462b1fbe, type: 3}
-  m_PrefabInstance: {fileID: 7964009208459100405}
+  m_CorrespondingSourceObject: {fileID: 4711549258963476809, guid: 3006a92a04e040b43b119f5f13833e84, type: 3}
+  m_PrefabInstance: {fileID: 1501617629833380011}
   m_PrefabAsset: {fileID: 0}

@@ -18,9 +18,11 @@ public class VisualsPlane : MonoBehaviour
 
     private void Update()
     {
+        /*
         float scale = Mathf.Lerp(scaleRange.x, scaleRange.y, HiveMQSubscriber.Instance.PotValue);
 
         transform.localScale = scale * Vector3.one;
+        */
     }
 
     public static Vector3 TransformPoint(Vector3 point)

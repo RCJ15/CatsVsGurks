@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 113678507001107880}
   - component: {fileID: 1520165441317185874}
   m_Layer: 0
-  m_Name: WarriorBarrackPreview
+  m_Name: BarrackPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TowerShop : MonoBehaviour
@@ -11,6 +12,7 @@ public class TowerShop : MonoBehaviour
     [SerializeField] private OVRInput.RawButton toggleShopInput;
 
     private BuyTowerButton[] _buttons;
+    private Vector3 _position;
     private Quaternion _rotation;
 
     private void Awake()
@@ -38,22 +40,28 @@ public class TowerShop : MonoBehaviour
 
             )
         {
-            _open = !_open;
-
-            if (_open)
-            {
-                _rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
-            }
-
-            // On Open
-            foreach (var button in _buttons)
-            {
-                button.Toggle(_open);
-            }
+            SetOpen(!_open);
         }
 
         // Follow
-        transform.position = cam.transform.position;
+        transform.position = _position;
         transform.rotation = Quaternion.Slerp(transform.rotation, _rotation, rotationDelta * Time.deltaTime);
+    }
+
+    public void SetOpen(bool open)
+    {
+        _open = open;
+
+        if (_open)
+        {
+            _position = cam.transform.position;
+            _rotation = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0);
+        }
+
+        // On Open
+        foreach (var button in _buttons)
+        {
+            button.Toggle(_open);
+        }
     }
 }

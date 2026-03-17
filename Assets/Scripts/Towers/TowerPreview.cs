@@ -73,8 +73,6 @@ public class TowerPreview : MonoBehaviour
             }
             */
         }
-
-        Debug.Log("SET MATERIAL TO " + material.name);
     }
 
 #if UNITY_EDITOR

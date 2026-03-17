@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RangedAttack : UnitAttack
 {
+    [SerializeField] private Vector3 startOffset;
     [SerializeField] private Transform projectile;
     [SerializeField] private Transform visuals;
     [SerializeField] private float colliderActiveTime;
@@ -116,7 +117,7 @@ public class RangedAttack : UnitAttack
 
             // Predict future position
             Rigidbody rb = Target.GetComponentInChildren<Rigidbody>(true);
-            _startPos = User.transform.position;
+            _startPos = User.transform.position + Vector3.Scale(startOffset, User.transform.forward) + Vector3.Scale(startOffset, User.transform.up);
             _targetPos = Target.transform.position;
 
             _oldPosition = _startPos;

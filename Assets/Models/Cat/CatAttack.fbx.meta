@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: acd7c27533d8bc8459efb6c36bd400b6
+guid: ff0478d685c8edf47b6a5ddac612d363
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,43 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Eyes
-    second: {fileID: 2100000, guid: a97f64125ca4fa142aee3bba103c29f5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Face_Furr
-    second: {fileID: 2100000, guid: 6639b9eeab825ee4ea6a4f2b1ddb70d2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Furr
-    second: {fileID: 2100000, guid: 39a773bc8bfc91c4bbdbd09a72ebeb49, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Nose
-    second: {fileID: 2100000, guid: 4b0d3859388cb8348a30c4b19f3df115, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tail
-    second: {fileID: 2100000, guid: 6e5eb2cbd7999734ab563adc3a22ea04, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tuff
-    second: {fileID: 2100000, guid: d1089d51a22606b43813c59fde9f2a50, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Whiskers
-    second: {fileID: 2100000, guid: 50606c819a3cea04285749cb6628b7ca, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: openPBR_shader1
-    second: {fileID: 2100000, guid: 0d8397d329e338541a77199e3bdd1f41, type: 2}
+    second: {fileID: 2100000, guid: d9872d29fcdd24c458f31a45398e99ce, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -71,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: CatWalk2
+      name: CatAttack
       takeName: Take 001
       internalID: 1827226128182048838
-      firstFrame: 15
-      lastFrame: 44
+      firstFrame: 0
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -94,7 +59,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.5075646
+        functionName: TriggerAnimEvent
+        data: Attack
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.91051674
+        functionName: TriggerAnimEvent
+        data: DoneAttack
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -102,7 +81,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 10
+    globalScale: 11
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -160,7 +139,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 10
+    globalScale: 0.11
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

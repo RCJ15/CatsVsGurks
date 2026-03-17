@@ -10,6 +10,9 @@ public class TransformVisuals : MonoBehaviour
     private Vector3 _startScale;
 
     private ParticleSystem[] _particles;
+    private TrailRenderer[] _trailRenderers;
+    private int _trailRenderersLength;
+    private float[] _trailRenderersSizes;
 
     private void Start()
     {
@@ -21,6 +24,15 @@ public class TransformVisuals : MonoBehaviour
         _transform.SetParent(null, true);
 
         _particles = GetComponentsInChildren<ParticleSystem>(true);
+
+        _trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
+        _trailRenderersLength = _trailRenderers.Length;
+        _trailRenderersSizes = new float[_trailRenderersLength];
+
+        for (int i = 0; i < _trailRenderersLength; i++)
+        {
+            _trailRenderersSizes[i] = _trailRenderers[i].widthMultiplier;
+        }
     }
 
     private void LateUpdate()
@@ -42,6 +54,13 @@ public class TransformVisuals : MonoBehaviour
         foreach (ParticleSystem particles in _particles)
         {
             particles.transform.localScale = scale;
+        }
+
+        float scale1D = Mathf.Max(scale.x, scale.y, scale.z);
+
+        for (int i = 0; i < _trailRenderersLength; i++)
+        {
+            _trailRenderers[i].widthMultiplier = _trailRenderersSizes[i] * scale1D;
         }
     }
 }

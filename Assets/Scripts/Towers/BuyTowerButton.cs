@@ -17,6 +17,7 @@ public class BuyTowerButton : MonoBehaviour, IClickable
     [SerializeField] private TowerPreview towerPreview;
 
     private LaserPointer _laserPointer;
+    private TowerShop _towerShop;
 
     public void OnClickDown()
     {
@@ -40,6 +41,8 @@ public class BuyTowerButton : MonoBehaviour, IClickable
 
         _laserPointer.TowerToPlace = tower;
         _laserPointer.TowerPreview = Instantiate(towerPreview);
+
+        _towerShop.SetOpen(false);
     }
 
     public void OnSelect()
@@ -62,6 +65,7 @@ public class BuyTowerButton : MonoBehaviour, IClickable
     private void Start()
     {
         _laserPointer = LaserPointer.Instance;
+        _towerShop = TowerShop.Instance;
 
         Player.OnChangeMoney += OnChangeMoney;
 
