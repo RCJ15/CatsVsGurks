@@ -95,12 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b539b3b456f2847a896e3f8167f20d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
-  extraSize: 2.4
-  hp: 6666
+  extraSize: 3
+  hp: 5000
   defense: 0
   knockbackResitance: 1
   unitName: Pickle Rick
-  speed: 0.25
+  speed: 0.4
   turnSpeed: 1.5
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
@@ -112,7 +112,7 @@ MonoBehaviour:
   chaseRange: 10
   rb: {fileID: 3041714261448962438}
   walkParticles: {fileID: 4917521183482902834}
-  value: {x: 50, y: 100}
+  value: {x: 2000, y: 2500}
   waveWeight: 9999
   altAttack: {fileID: 0}
 --- !u!54 &3041714261448962438

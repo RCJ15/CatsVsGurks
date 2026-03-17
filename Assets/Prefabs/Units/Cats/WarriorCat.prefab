@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 415779460217112554}
   serializedVersion: 2
   m_LocalRotation: {x: -0.37912178, y: -0.49726632, z: 0.6300226, w: 0.46050465}
-  m_LocalPosition: {x: -0, y: -0.01, z: -0.044}
-  m_LocalScale: {x: 6.864249, y: 6.864249, z: 6.864249}
+  m_LocalPosition: {x: -0.0066, y: -0.0121, z: -0.0484}
+  m_LocalScale: {x: 8.481275, y: 8.481275, z: 8.481275}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6222957444630419108}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 100
+  hp: 125
   defense: 0
   knockbackResitance: 0
   unitName: Warrior Cat
@@ -150,13 +150,14 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
-  damage: 35
+  damage: 40
   attackDelay: 1
   attackAnimSpeed: 2.2
   range: 1
   chaseRange: 10
   rb: {fileID: 2354061441159466880}
   walkParticles: {fileID: 1515324228855876032}
+  color: 0
 --- !u!54 &2354061441159466880
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -63,7 +63,7 @@ public class BasePlacer : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(targetObject.transform.position);
+        //Debug.Log(targetObject.transform.position);
 
         if (justStarted && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {

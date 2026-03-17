@@ -150,12 +150,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 2
-  hp: 10
+  hp: 20
   defense: 999
   knockbackResitance: 1
   unitName: Gurk Burk
-  speed: 3
-  turnSpeed: 4
+  speed: 1.5
+  turnSpeed: 3
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
@@ -163,10 +163,11 @@ MonoBehaviour:
   attackDelay: 1
   attackAnimSpeed: 1
   range: 2.5
-  chaseRange: 0
+  chaseRange: 50
   rb: {fileID: 4013046678204476287}
   walkParticles: {fileID: 554658195102576318}
   value: {x: 100, y: 250}
+  waveWeight: 20
 --- !u!54 &4013046678204476287
 Rigidbody:
   m_ObjectHideFlags: 0

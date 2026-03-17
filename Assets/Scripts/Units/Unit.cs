@@ -137,8 +137,6 @@ public abstract class Unit : Entity
         _manager = PathfindingManager.Instance;
         _globalUnitSettings = GlobalUnitSettings.Instance;
 
-        Debug.Log(_globalUnitSettings);
-
         BeginInvokeRepeating();
     }
 

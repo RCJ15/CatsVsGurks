@@ -221,7 +221,24 @@ public class LaserPointer : MonoBehaviour
                 break;
         }
 
+        Debug.Log("CHANGE COLOR to " + color + " | " + laserColor);
+
         laser.startColor = laserColor;
+        laser.endColor = laserColor;
+
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+        new GradientColorKey[] {
+            new GradientColorKey(laserColor, 0.0f),
+            new GradientColorKey(laserColor, 1.0f)
+        },
+        new GradientAlphaKey[] {
+            new GradientAlphaKey(1.0f, 0.0f),
+            new GradientAlphaKey(1.0f, 1.0f)
+        }
+        );
+
+        laser.colorGradient = gradient;
     }
 
     public enum Color

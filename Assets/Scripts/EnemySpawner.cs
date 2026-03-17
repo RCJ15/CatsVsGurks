@@ -17,12 +17,12 @@ public class EnemySpawner : MonoBehaviour
     private float _spawnTimer;
 
     private bool _isPlaying;
+    private int _waveIndex;
 
     private void Start()
     {
         // TEMP
-        Debug.LogWarning("DELETE THIS");
-        Begin();
+        //Begin();
     }
 
     private void Update()
@@ -38,6 +38,9 @@ public class EnemySpawner : MonoBehaviour
             {
                 // Start next wave
                 Debug.Log("WAVE COMPLETE");
+
+                _waveIndex++;
+                StartWave(_waveIndex);
             }
             return;
         }
@@ -102,6 +105,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartWave(int wave)
     {
+        _waveIndex = wave;
+
         Debug.Log("STARTING WAVE " + wave);
         _currentWave = waves[wave];
 

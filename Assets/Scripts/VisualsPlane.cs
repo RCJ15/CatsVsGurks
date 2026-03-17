@@ -27,14 +27,14 @@ public class VisualsPlane : MonoBehaviour
         float scale;
         if (HiveMQSubscriber.Instance == null)
         {
-            Debug.LogWarning("VisualsPlane: HiveMQSubscriber.Instance is null. Ensure a HiveMQSubscriber exists in the scene and its Awake() ran.");
+            //Debug.LogWarning("VisualsPlane: HiveMQSubscriber.Instance is null. Ensure a HiveMQSubscriber exists in the scene and its Awake() ran.");
             scale = Mathf.Lerp(scaleRange.x, scaleRange.y, 0.5f); // Default to mid-range if HiveMQSubscriber is not available
-            Debug.Log("Hej Vi scalea nyss");
+            //Debug.Log("Hej Vi scalea nyss");
 
         }
         else
         {
-            Debug.Log("Hej VARFÖR ÄR VI HÄR STOP STOP STOP");
+            //Debug.Log("Hej VARFÖR ÄR VI HÄR STOP STOP STOP");
 
             float potValue = Mathf.Clamp01(HiveMQSubscriber.Instance.PotValue);
             scale = Mathf.Lerp(scaleRange.x, scaleRange.y, potValue);
@@ -43,11 +43,11 @@ public class VisualsPlane : MonoBehaviour
 
         transform.localScale = scale * Vector3.one;
 
-        Debug.Log("Hej Checking right trigger now");
+        //Debug.Log("Hej Checking right trigger now");
 
         if (tutorial.GetComponent<TutorialText>().currentTextIndex == 3 && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {
-            Debug.Log("HEJ!");
+            //Debug.Log("HEJ!");
             fieldPlaced = true;
 
             if (tutorial == null)

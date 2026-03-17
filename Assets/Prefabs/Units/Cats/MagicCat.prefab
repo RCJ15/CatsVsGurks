@@ -256,7 +256,7 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2889662702771563516, guid: 3b2294b287354d14aa17eff3a585cd3c, type: 3}
-  damage: 45
+  damage: 35
   attackDelay: 1.7
   attackAnimSpeed: 1.5
   range: 8
