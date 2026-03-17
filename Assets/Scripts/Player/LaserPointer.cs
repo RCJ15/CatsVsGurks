@@ -13,6 +13,8 @@ public class LaserPointer : MonoBehaviour
 
     public static Color CurrentColor { get; private set; } = Color.Red;
 
+    [SerializeField] private GameObject tutorial;
+
     public static ClickableObject CurrentClickable
     {
         get => _currentClickable;
@@ -93,6 +95,8 @@ public class LaserPointer : MonoBehaviour
 
                     Destroy(TowerPreview.gameObject);
                     TowerPreview = null;
+                    if(tutorial.GetComponent<TutorialText>().currentTextIndex == 4)
+                        StartCoroutine(tutorial.GetComponent<TutorialText>().Spawn());
                 }
                 else
                 {

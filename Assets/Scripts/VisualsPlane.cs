@@ -45,7 +45,7 @@ public class VisualsPlane : MonoBehaviour
 
         Debug.Log("Hej Checking right trigger now");
 
-        if (OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
+        if (tutorial.GetComponent<TutorialText>().currentTextIndex == 3 && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {
             Debug.Log("HEJ!");
             fieldPlaced = true;

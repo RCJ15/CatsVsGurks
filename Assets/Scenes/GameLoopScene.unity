@@ -1101,6 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab83551466b67cc40be7aa670708e40f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserPointer
+  tutorial: {fileID: 2035463428}
   clickablesLayer:
     serializedVersion: 2
     m_Bits: 160
@@ -3081,6 +3082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32231e747e7e8e440b41b962823fcdc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBase
+  extraSize: 0
   hp: 1000
   defense: 0
   cost: 9999
@@ -5663,6 +5665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialText
   cameraTransform: {fileID: 1318815680}
   offset: 2
+  currentTextIndex: 1
   T1: {fileID: 1162987839}
   T2: {fileID: 1614361051}
   T3: {fileID: 2073039056}

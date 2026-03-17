@@ -5,7 +5,7 @@ public class TutorialText : MonoBehaviour
 {
     public Transform cameraTransform;
     public float offset = 2f;
-    private int currentTextIndex = 1;
+    public int currentTextIndex = 1;
     [SerializeField] private GameObject T1;
     [SerializeField] private GameObject T2;
     [SerializeField] private GameObject T3;
@@ -25,7 +25,6 @@ public class TutorialText : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
             Debug.Log("hej t1");
             T1.SetActive(true);
-            currentTextIndex++;
         }
         else if(currentTextIndex == 2)
         {
@@ -33,14 +32,20 @@ public class TutorialText : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             Debug.Log("hej t2");
             T2.SetActive(true);
-            currentTextIndex++;
         }
-        else
+        else if (currentTextIndex == 3)
         {
             T2.SetActive(false);
             yield return new WaitForSeconds(0.5f);
             T3.SetActive(true);
+            
         }
+        else
+            {
+            yield return new WaitForSeconds(0.2f);
+            gameObject.SetActive(false);
+        }
+        currentTextIndex++;
 
         Vector3 forward = cameraTransform.forward.normalized;
         Vector3 targetPosition = cameraTransform.position + forward * offset + new Vector3(0, 0, 0);
@@ -49,6 +54,8 @@ public class TutorialText : MonoBehaviour
         StartCoroutine(AnimateMenu(targetPosition, targetRotation));
         Debug.Log("hej slut");
     }
+
+    
 
     IEnumerator AnimateMenu(Vector3 targetPosition, Quaternion targetRotation)
     {
