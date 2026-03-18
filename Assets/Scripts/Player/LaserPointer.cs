@@ -61,6 +61,7 @@ public class LaserPointer : MonoBehaviour
     [Space]
     [SerializeField] private OVRInput.RawButton confirmRightButton;
     [SerializeField] private OVRInput.RawButton confirmLeftButton;
+    [SerializeField] private OVRInput.RawButton restartButton;
     private float _tempRestartTimer;
     private bool _tempRestarting;
 
@@ -70,7 +71,7 @@ public class LaserPointer : MonoBehaviour
     [SerializeField] private float timeUntilAttracted;
     [SerializeField] private float attractionDuration;
 
-    private LineRenderer[] _lasers;
+    [SerializeField] private LineRenderer[] lasers;
 
     private void Awake()
     {
@@ -79,12 +80,12 @@ public class LaserPointer : MonoBehaviour
         SqrAttractionRange = attractionRange * attractionRange;
         SqrForcedAttractionRange = forcedAttractionRange * forcedAttractionRange;
 
-        _lasers = GetComponentsInChildren<LineRenderer>(true);
+        lasers = GetComponentsInChildren<LineRenderer>(true);
 
-        _lasers[0].enabled = false;
-        _lasers[1].enabled = false;
-        _lasers[2].enabled = false;
-        _lasers[3].enabled = false;
+        lasers[0].enabled = false;
+        lasers[1].enabled = false;
+        lasers[2].enabled = false;
+        lasers[3].enabled = false;
 
         ChangeColorLocal(CurrentColor);
     }
@@ -112,18 +113,23 @@ public class LaserPointer : MonoBehaviour
             ChangeColor(Color.Blue);
         }
 
-        if (OVRInput.GetDown(confirmLeftButton))
-        {
-            _tempRestarting = true;
-        }
+        _tempRestarting = OVRInput.Get(restartButton)
 
-        if (OVRInput.GetUp(confirmLeftButton))
+#if UNITY_EDITOR
+            || UnityEngine.InputSystem.Keyboard.current.enterKey.isPressed
+#endif
+            ;
+
+        if (_tempRestarting)
         {
-            _tempRestarting = false;
             _tempRestartTimer += Time.deltaTime;
         }
+        else
+        {
+            _tempRestartTimer = 0;
+        }
 
-        if (_tempRestartTimer > 3f)
+        if (_tempRestartTimer > 2f)
         {
             Debug.Log("RESTART!!!");
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
@@ -144,6 +150,7 @@ public class LaserPointer : MonoBehaviour
 
                     Destroy(TowerPreview.gameObject);
                     TowerPreview = null;
+
                     if(tutorial.GetComponent<TutorialText>().currentTextIndex == 4)
                         StartCoroutine(tutorial.GetComponent<TutorialText>().Spawn());
                 }
@@ -212,7 +219,7 @@ public class LaserPointer : MonoBehaviour
         if (!success)
         {
             Vector3 hitPoint = hand.position + (hand.forward * maxDistance);
-            foreach (var laser in _lasers)
+            foreach (var laser in lasers)
             {
                 laser.SetPosition(0, hand.position);
                 laser.SetPosition(1, hitPoint);
@@ -225,7 +232,7 @@ public class LaserPointer : MonoBehaviour
         hit = _hits[0];
         Point = hit.point;
 
-        foreach (var laser in _lasers)
+        foreach (var laser in lasers)
         {
             laser.SetPosition(0, hand.position);
             laser.SetPosition(1, VisualsPlane.TransformPoint(hit.point));
@@ -252,12 +259,12 @@ public class LaserPointer : MonoBehaviour
     {
         CurrentColor = color;
 
-        _lasers[0].enabled = false;
-        _lasers[1].enabled = false;
-        _lasers[2].enabled = false;
-        _lasers[3].enabled = false;
+        lasers[0].enabled = false;
+        lasers[1].enabled = false;
+        lasers[2].enabled = false;
+        lasers[3].enabled = false;
 
-        _lasers[(int)color].enabled = true;
+        lasers[(int)color].enabled = true;
     }
 
     public enum Color

@@ -11,6 +11,7 @@ public class HiveMQSubscriber : MonoBehaviour
     public static HiveMQSubscriber Instance { get; private set; }
 
     public float PotValue { get; private set; }
+    public bool Connected { get; private set; } = false;
 
     [Header("Broker Settings")]
     public string brokerHost = "broker.hivemq.com";
@@ -56,6 +57,7 @@ public class HiveMQSubscriber : MonoBehaviour
         {
             await client.ConnectAsync(options);
             Debug.Log("Connected to broker");
+            Connected = true;
 
             await SubscribeToTopic(topic_beamMode);
             await SubscribeToTopic(topic_button);
@@ -65,6 +67,7 @@ public class HiveMQSubscriber : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError("Connection failed: " + ex.Message);
+            Connected = false;
         }
     }
 
@@ -161,14 +164,30 @@ public class HiveMQSubscriber : MonoBehaviour
                 Debug.Log("Selection changed from " + lastSelected + " to " + payload);
                 lastSelected = payload;
 
-                if (payload == "3")
-                {
+                LaserPointer.Color color;
 
-                }
-                else if (payload == "4")
+                // Red
+                if (payload == "4")
                 {
-
+                    color = LaserPointer.Color.Red;
                 }
+                // Yellow
+                else if (payload == "3")
+                {
+                    color = LaserPointer.Color.Yellow;
+                }
+                // Green
+                else if (payload == "2")
+                {
+                    color = LaserPointer.Color.Green;
+                }
+                // Blue
+                else
+                {
+                    color = LaserPointer.Color.Blue;
+                }
+
+                LaserPointer.ChangeColor(color);
             }
         }
         else if (topic == topic_pot)

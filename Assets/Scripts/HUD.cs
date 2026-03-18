@@ -2,8 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.PlayerLoop;
-using System;
 
 public class HUD : MonoBehaviour
 {
@@ -23,6 +21,9 @@ public class HUD : MonoBehaviour
 
     [SerializeField] private TMP_Text waveText;
     private string _waveFormat;
+
+    [SerializeField] private TMP_Text gurksRemainingText;
+    private string _gurksRemainingFormat;
 
     [Header("Health")]
     [SerializeField] private Slider healthSlider;
@@ -55,6 +56,8 @@ public class HUD : MonoBehaviour
 
         _moneySpeed = 1 / moneyCountDuration;
 
+        _gurksRemainingFormat = gurksRemainingText.text;
+
         UpdateMoneyText();
 
         Player.OnChangeMoney += OnChangeMoney;
@@ -70,12 +73,22 @@ public class HUD : MonoBehaviour
         Player.OnChangeMaxHP += OnChangeMaxHP;
     }
 
+    private void OnDestroy()
+    {
+        Player.OnChangeMoney -= OnChangeMoney;
+        Player.OnChangeWave -= OnChangeWave;
+        Player.OnChangeHP -= OnChangeHP;
+        Player.OnChangeMaxHP -= OnChangeMaxHP;
+    }
+
     private void Update()
     {
         transform.position = HeadPosition.Pos;
         transform.rotation = Quaternion.Euler(0, HeadPosition.EulerAngles.y, 0);
 
         canvasObj.transform.forward = canvasObj.transform.position - HeadPosition.Pos;
+
+        gurksRemainingText.text = string.Format(_gurksRemainingFormat, Gurk.GurksRemaining, Gurk.GurksRemaining != 1 ? "s" : "");
 
         int money;
 

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
+  dontModifyParticles: 0
 --- !u!1 &6965094361091913099
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493b0a1245c221742ac45adbfcde99a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerPreview
+  maxSize: {x: 80, y: 80}
   size: {x: 4.2, y: 4.2}
 --- !u!1001 &886802121190426986
 PrefabInstance:

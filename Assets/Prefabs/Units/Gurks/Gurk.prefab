@@ -103,23 +103,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 0.2
-  hp: 90
+  hp: 200
   defense: 0
   knockbackResitance: 0
   unitName: Gurk Warrior
-  speed: 2.5
+  speed: 3
   turnSpeed: 3
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
-  damage: 35
-  attackDelay: 0.9
-  attackAnimSpeed: 1.85
+  damage: 25
+  attackDelay: 1.025
+  attackAnimSpeed: 2
   range: 1
   chaseRange: 10
   rb: {fileID: 3844197759747853793}
   walkParticles: {fileID: 4417621658955038417}
-  value: {x: 50, y: 100}
+  attackSfx: Sword
+  deathSfx: GurkDeath
+  value: {x: 75, y: 120}
   waveWeight: 1
 --- !u!54 &3844197759747853793
 Rigidbody:
@@ -212,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1001 &4074432603699945285
 PrefabInstance:
   m_ObjectHideFlags: 0

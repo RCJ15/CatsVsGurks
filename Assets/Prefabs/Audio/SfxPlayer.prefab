@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6687398772862784151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2156170677385055916}
+  - component: {fileID: 831393043064083037}
+  m_Layer: 0
+  m_Name: SfxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2156170677385055916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6687398772862784151}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &831393043064083037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6687398772862784151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0b699fb4ad2d140bead66977c3124d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  template: {fileID: 4150229447978999835, guid: 73ea601eb0136614396c73f563796ae3, type: 3}
+  clips:
+  - {fileID: 8300000, guid: 243275b1076aea94ea92a7b2bf58e474, type: 3}
+  - {fileID: 8300000, guid: bd3ea1c9712efa24db85214cd1ea33eb, type: 3}
+  - {fileID: 8300000, guid: a8f91ce205e259e4b8c833b69de2e3e5, type: 3}
+  - {fileID: 8300000, guid: 1c80f3264478c184cae67837b72f490f, type: 3}
+  - {fileID: 8300000, guid: 90f2a81b64e5b1f4e9bd257ee901eea5, type: 3}
+  - {fileID: 8300000, guid: 00f5b1d0dfec01343ae4b8ec329d4c1d, type: 3}
+  - {fileID: 8300000, guid: b75e8e5fe990d4b4a8b454ce6a092d09, type: 3}
+  - {fileID: 8300000, guid: 7e70bd6d69295974eb2acde2dc6efdc9, type: 3}
+  - {fileID: 8300000, guid: eefc9cb162cc8da49aae74b2bffebd7f, type: 3}
+  - {fileID: 8300000, guid: 465232098d2e3e84c80c4322c804810f, type: 3}

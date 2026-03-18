@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 0.2
-  hp: 500
+  hp: 1500
   defense: 10
   knockbackResitance: 1
   unitName: Gurk Tank
@@ -150,15 +150,17 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 7689457974584012898, guid: cfb0bc7f116f8684191e606a1b8ebf6a, type: 3}
-  damage: 20
+  damage: 50
   attackDelay: 3.5
   attackAnimSpeed: 0.85
   range: 1
   chaseRange: 10
   rb: {fileID: 6429096939632530026}
   walkParticles: {fileID: 3544198798845633934}
-  value: {x: 125, y: 200}
-  waveWeight: 4
+  attackSfx: 
+  deathSfx: GurkDeath
+  value: {x: 300, y: 500}
+  waveWeight: 5
 --- !u!54 &6429096939632530026
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -396,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1001 &96922468415114332
 PrefabInstance:
   m_ObjectHideFlags: 0

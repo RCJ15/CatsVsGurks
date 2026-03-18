@@ -11,15 +11,12 @@ public abstract class Unit : Entity
 {
     private static readonly RaycastHit[] _hit = new RaycastHit[5];
 
-    public static readonly Dictionary<Team, List<Unit>> AllUnits = new();
-
     public Animator Animator { get; private set; }
     public Action<string> OnAnimEvent { get; set; }
     public bool CanMove { get; set; } = true;
 
     private Vector3 _targetPos;
     private bool _reachedTarget;
-    private List<Entity> _entityTargetList = new();
     protected Entity _entityTarget;
     private bool _entityTargetInRange;
 
@@ -69,7 +66,7 @@ public abstract class Unit : Entity
     private float _currentVelocity;
 
     [Space]
-    [SerializeField] private UnitAttack attack;
+    [SerializeField] protected UnitAttack attack;
     [Tooltip("Damage, self explanatory")]
     [SerializeField] private float damage = 25;
     [Tooltip("Seconds of delay between each attack")]
@@ -87,6 +84,10 @@ public abstract class Unit : Entity
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem walkParticles;
+
+    [Space]
+    [SerializeField] private string attackSfx;
+    [SerializeField] private string deathSfx;
 
     private PathfindingManager _manager;
     private GlobalUnitSettings _globalUnitSettings;
@@ -144,15 +145,6 @@ public abstract class Unit : Entity
     {
         base.OnEnable();
 
-        if (AllUnits.TryGetValue(Team, out var list))
-        {
-            list.Add(this);
-        }
-        else
-        {
-            AllUnits[Team] = new List<Unit>() { this };
-        }
-
         if (_globalUnitSettings != null)
         {
             BeginInvokeRepeating();
@@ -167,11 +159,6 @@ public abstract class Unit : Entity
     protected override void OnDisable()
     {
         base.OnDisable();
-
-        if (AllUnits.TryGetValue(Team, out var list))
-        {
-            list.Remove(this);
-        }
 
         CancelInvoke(nameof(UpdatePathfinding));
     }
@@ -198,6 +185,12 @@ public abstract class Unit : Entity
 
     protected virtual void Update()
     {
+        if (transform.position.y <= -20)
+        {
+            Die();
+            return;
+        }
+
         if (_entityTarget != null && !_entityTarget.Targettable)
         {
             _entityTarget = null;
@@ -304,25 +297,23 @@ public abstract class Unit : Entity
 
     protected virtual Entity DetermineEntityTarget()
     {
-        _entityTargetList.Clear();
-
         Team oppositeTeam = Team == Team.Player ? Team.Enemy : Team.Player;
-        if (AllUnits.TryGetValue(oppositeTeam, out var list))
-        {
-            _entityTargetList.AddRange(list);
-        }
 
         Entity result = null;
-        float closestDist = float.MaxValue;
 
-        foreach (Entity entity in _entityTargetList)
+        if (AllEntities.TryGetValue(oppositeTeam, out var list))
         {
-            float sqrDist = (transform.position - entity.transform.position).sqrMagnitude;
+            float closestDist = float.MaxValue;
 
-            if (sqrDist < _sqrChaseRange && sqrDist < closestDist)
+            foreach (Entity entity in list)
             {
-                closestDist = sqrDist;
-                result = entity;
+                float sqrDist = (transform.position - entity.transform.position).sqrMagnitude;
+
+                if (sqrDist < _sqrChaseRange && sqrDist < closestDist)
+                {
+                    closestDist = sqrDist;
+                    result = entity;
+                }
             }
         }
 
@@ -385,6 +376,8 @@ public abstract class Unit : Entity
 
     protected virtual void Attack()
     {
+        SfxPlayer.PlaySfx(attackSfx);
+
         _attackCooldown = attackDelay;
 
         SpawnAttack(attack);

@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &3966721679869838704
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,19 +248,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 75
+  hp: 85
   defense: 5
   knockbackResitance: 0
   unitName: Magic Cat
-  speed: 3.7
+  speed: 3
   turnSpeed: 5
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2889662702771563516, guid: 3b2294b287354d14aa17eff3a585cd3c, type: 3}
-  damage: 35
-  attackDelay: 1.7
-  attackAnimSpeed: 1.5
-  range: 8
+  damage: 25
+  attackDelay: 1.8
+  attackAnimSpeed: 1.55
+  range: 7.5
   chaseRange: 20
   rb: {fileID: 1582546187264139112}
   walkParticles: {fileID: 3737265296382108293}

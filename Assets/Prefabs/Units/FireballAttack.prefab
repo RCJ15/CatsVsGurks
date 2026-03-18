@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
   col: {fileID: 3324517864138852881}
   friendlyFire: 0
-  knockbackForce: 12
+  knockbackForce: 10
   startOffset: {x: 0, y: 1, z: 0}
   projectile: {fileID: 1533320581888395826}
   visuals: {fileID: 4410304755357771323}
@@ -136,7 +136,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2.5
+  m_Radius: 2.3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6594113237797160074
 GameObject:
@@ -368,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
+  dontModifyParticles: 0
 --- !u!1 &7401536385352410252
 GameObject:
   m_ObjectHideFlags: 0

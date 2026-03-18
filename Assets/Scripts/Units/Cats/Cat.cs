@@ -7,7 +7,7 @@ public class Cat : Unit
     [Space]
     [SerializeField] private LaserPointer.Color color = LaserPointer.Color.Red;
 
-    public bool MatchingColor => color == LaserPointer.CurrentColor;
+    public bool MatchingColor => HiveMQSubscriber.Instance == null || !HiveMQSubscriber.Instance.Connected || color == LaserPointer.CurrentColor;
 
     private LaserPointer _laserPointer;
 
@@ -21,6 +21,8 @@ public class Cat : Unit
         base.Start();
 
         _laserPointer = LaserPointer.Instance;
+
+        SfxPlayer.PlaySfx("Meow3");
     }
 
     protected override void Update()
@@ -47,6 +49,8 @@ public class Cat : Unit
                 {
                     _attractionDuration = _laserPointer.AttractionDuration;
                     _attracted = true;
+
+                    SfxPlayer.PlaySfx("Meow2");
                 }
             }
         }
@@ -65,6 +69,13 @@ public class Cat : Unit
                 _attractionDuration -= Time.deltaTime;
             }
         }
+    }
+
+    protected override void Attack()
+    {
+        base.Attack();
+
+        SfxPlayer.PlaySfx("Meow1");
     }
 
     protected override void FoundEntityTarget()

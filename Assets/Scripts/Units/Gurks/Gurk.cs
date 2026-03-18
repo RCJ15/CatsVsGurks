@@ -25,6 +25,11 @@ public class Gurk : Unit
         GurksRemaining++;
     }
 
+    private void OnDestroy()
+    {
+        GurksRemaining--;
+    }
+
     private void SetRandPos()
     {
         randPos = Random.insideUnitCircle * 45f;
@@ -79,8 +84,6 @@ public class Gurk : Unit
     public override void Die()
     {
         base.Die();
-
-        GurksRemaining--;
 
         // Give money to player
         Player.Money += Random.Range(value.x, value.y);

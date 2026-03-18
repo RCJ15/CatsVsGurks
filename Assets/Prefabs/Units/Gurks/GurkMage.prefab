@@ -255,23 +255,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 0.2
   hp: 150
-  defense: 0
+  defense: 5
   knockbackResitance: 0
   unitName: Gurk Mage
-  speed: 1.8
+  speed: 2
   turnSpeed: 3
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2889662702771563516, guid: 3b2294b287354d14aa17eff3a585cd3c, type: 3}
-  damage: 40
-  attackDelay: 1.7
-  attackAnimSpeed: 1.4
-  range: 7
-  chaseRange: 14
+  damage: 50
+  attackDelay: 1.8
+  attackAnimSpeed: 1.7
+  range: 8.5
+  chaseRange: 20
   rb: {fileID: 8667226687437431987}
   walkParticles: {fileID: 7000320570259734754}
-  value: {x: 120, y: 150}
-  waveWeight: 3
+  attackSfx: 
+  deathSfx: GurkDeath
+  value: {x: 250, y: 350}
+  waveWeight: 6
 --- !u!54 &8667226687437431987
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -514,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &8866516947224547604
 GameObject:
   m_ObjectHideFlags: 0

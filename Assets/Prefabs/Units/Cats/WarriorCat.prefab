@@ -141,18 +141,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 125
+  hp: 110
   defense: 0
   knockbackResitance: 0
   unitName: Warrior Cat
-  speed: 4.1
+  speed: 4.5
   turnSpeed: 5
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
-  damage: 40
-  attackDelay: 1
-  attackAnimSpeed: 2.2
+  attackSfx: sword
+  damage: 45
+  attackDelay: 0.9
+  attackAnimSpeed: 2.4
   range: 1
   chaseRange: 10
   rb: {fileID: 2354061441159466880}
@@ -249,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &8657394106931978939
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,7 +33,7 @@ Transform:
   - {fileID: 7541442812526553431}
   - {fileID: 5785216694042367310}
   - {fileID: 7082944873081955318}
-  - {fileID: 8089775681997297533}
+  - {fileID: 4504147701471398913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7215492039237309735
@@ -48,14 +48,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e997b9a33c60fd49b10b87a22d2c6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Barrack
-  extraSize: 2
+  extraSize: 2.3
   hp: 200
-  defense: 0
-  cost: 350
+  defense: 10
+  cost: 300
   spawnPoint: {fileID: 7082944873081955318}
   catToSpawn: {fileID: 8548241625530612159, guid: aabbac7b11ab3f34c92b6d0a5b1be333, type: 3}
-  catLimit: 5
-  timeBtwSpawns: 15
+  catLimit: 4
+  timeBtwSpawns: 20
   firstSpawnTimer: 5
   visual: {fileID: 8089775681997297533}
   timer: {fileID: 1190884091981945561}
@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
+  dontModifyParticles: 0
 --- !u!1 &2942510543855019499
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,13 +208,59 @@ MonoBehaviour:
   radius: 0.5
   block: 1
   cost: 0
+--- !u!1 &3296050135340214321
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4504147701471398913}
+  - component: {fileID: 5684575254351956674}
+  m_Layer: 6
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4504147701471398913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3296050135340214321}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8089775681997297533}
+  m_Father: {fileID: 7090596693526199652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5684575254351956674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3296050135340214321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
+  dontModifyParticles: 0
 --- !u!1001 &1447441223273669085
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 7090596693526199652}
+    m_TransformParent: {fileID: 4504147701471398913}
     m_Modifications:
     - target: {fileID: 3479599788338351878, guid: 3023d4b0a6bacd1478ac152da27aed80, type: 3}
       propertyPath: m_Name
@@ -269,15 +316,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7229104237432616608, guid: 3023d4b0a6bacd1478ac152da27aed80, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7229104237432616608, guid: 3023d4b0a6bacd1478ac152da27aed80, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7229104237432616608, guid: 3023d4b0a6bacd1478ac152da27aed80, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7229104237432616608, guid: 3023d4b0a6bacd1478ac152da27aed80, type: 3}
       propertyPath: m_AnchoredPosition.x

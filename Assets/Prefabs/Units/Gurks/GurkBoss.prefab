@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &4642416836934938983
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,8 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 3
-  hp: 5000
-  defense: 0
+  hp: 10000
+  defense: 10
   knockbackResitance: 1
   unitName: Pickle Rick
   speed: 0.4
@@ -105,16 +106,18 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 6746915590966855547, guid: 5a356f972be08794ca6618f033ba7110, type: 3}
-  damage: 250
-  attackDelay: 9.8
-  attackAnimSpeed: 0.23
+  damage: 500
+  attackDelay: 8
+  attackAnimSpeed: 0.36
   range: 4
   chaseRange: 10
   rb: {fileID: 3041714261448962438}
   walkParticles: {fileID: 4917521183482902834}
+  attackSfx: 
+  deathSfx: GurkDeath
   value: {x: 2000, y: 2500}
   waveWeight: 9999
-  altAttack: {fileID: 0}
+  altAttack: {fileID: 5705618595326724187, guid: 2cab3f7575cefe8459c39b99a7566e89, type: 3}
 --- !u!54 &3041714261448962438
 Rigidbody:
   m_ObjectHideFlags: 0

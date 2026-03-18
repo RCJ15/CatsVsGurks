@@ -7,6 +7,8 @@ using System;
 public abstract class Entity : MonoBehaviour
 {
     public abstract Team Team { get; }
+
+    public static readonly Dictionary<Team, List<Entity>> AllEntities = new();
     public bool Targettable { get; set; } = true;
 
     public static readonly Dictionary<Collider, Entity> EntityColliders = new();
@@ -132,6 +134,15 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        if (AllEntities.TryGetValue(Team, out var list))
+        {
+            list.Add(this);
+        }
+        else
+        {
+            AllEntities[Team] = new List<Entity>() { this };
+        }
+
         Collider = GetComponentInChildren<Collider>(true);
 
         if (Collider == null) return;
@@ -140,6 +151,11 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        if (AllEntities.TryGetValue(Team, out var list))
+        {
+            list.Remove(this);
+        }
+
         if (Collider == null) return;
         EntityColliders.Remove(Collider);
     }

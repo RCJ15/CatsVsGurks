@@ -9,9 +9,11 @@ public class VisualsPlane : MonoBehaviour
 
     [SerializeField] private Vector2 scaleRange;
 
+    [SerializeField] private GameObject visualizePlane;
     [SerializeField] private GameObject tutorial;
 
-    private bool fieldPlaced = false;
+    public bool FieldPlaced => _fieldPlaced;
+    private bool _fieldPlaced = false;
 
     private void Awake()
     {
@@ -22,13 +24,16 @@ public class VisualsPlane : MonoBehaviour
 
     private void Update()
     {
-        if (fieldPlaced)
+        visualizePlane.gameObject.SetActive(!_fieldPlaced);
+
+        if (_fieldPlaced)
             return;
+
         float scale;
         if (HiveMQSubscriber.Instance == null)
         {
             //Debug.LogWarning("VisualsPlane: HiveMQSubscriber.Instance is null. Ensure a HiveMQSubscriber exists in the scene and its Awake() ran.");
-            scale = Mathf.Lerp(scaleRange.x, scaleRange.y, 0.5f); // Default to mid-range if HiveMQSubscriber is not available
+            scale = Mathf.Lerp(scaleRange.x, scaleRange.y, 0.6f); // Default to mid-range if HiveMQSubscriber is not available
             //Debug.Log("Hej Vi scalea nyss");
 
         }
@@ -36,7 +41,7 @@ public class VisualsPlane : MonoBehaviour
         {
             //Debug.Log("Hej VARFÖR ÄR VI HÄR STOP STOP STOP");
 
-            float potValue = Mathf.Clamp01(HiveMQSubscriber.Instance.PotValue);
+            float potValue = Mathf.Clamp01(HiveMQSubscriber.Instance.Connected ? HiveMQSubscriber.Instance.PotValue : 0.6f);
             scale = Mathf.Lerp(scaleRange.x, scaleRange.y, potValue);
 
         }
@@ -48,7 +53,7 @@ public class VisualsPlane : MonoBehaviour
         if (tutorial.GetComponent<TutorialText>().currentTextIndex == 3 && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
         {
             //Debug.Log("HEJ!");
-            fieldPlaced = true;
+            _fieldPlaced = true;
 
             if (tutorial == null)
             {

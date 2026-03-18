@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitVisuals
+  dontModifyParticles: 0
 --- !u!1 &1666142245768637540
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,16 +151,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 320
-  defense: 15
+  hp: 555
+  defense: 20
   knockbackResitance: 1
   unitName: Tank Cat
-  speed: 2.5
+  speed: 3.7
   turnSpeed: 5
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 7689457974584012898, guid: cfb0bc7f116f8684191e606a1b8ebf6a, type: 3}
-  damage: 12.5
+  damage: 15
   attackDelay: 2.1
   attackAnimSpeed: 1.2
   range: 1

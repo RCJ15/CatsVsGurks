@@ -44,58 +44,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79db98e43078fb4bb43dd1f9ae66154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  min: {x: 94, y: 94}
-  max: {x: 98, y: 98}
+  min: {x: 90, y: 90}
+  max: {x: 95, y: 95}
+  forceNextWave: 805306368
   waves:
   - enemies:
     - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
     - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
     - {fileID: 625804847634395182, guid: d49763f499bb8544f8aed958149f821c, type: 3}
-    value: 10
-    timeBtwSpawns: {x: 4, y: 10}
-    startDelay: 5
-  - enemies:
-    - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
-    - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
-    - {fileID: 625804847634395182, guid: d49763f499bb8544f8aed958149f821c, type: 3}
-    - {fileID: 5950270917255607932, guid: 5fe68198f7dd3bf4a84b5809816e3d46, type: 3}
-    value: 15
-    timeBtwSpawns: {x: 2.5, y: 6}
-    startDelay: 10
-  - enemies:
-    - {fileID: 6568799277549759588, guid: 1c751b82e6660f845822f9b7f659e275, type: 3}
-    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
     value: 20
-    timeBtwSpawns: {x: 2.5, y: 5.5}
-    startDelay: 10
-  - enemies:
-    - {fileID: 625804847634395182, guid: d49763f499bb8544f8aed958149f821c, type: 3}
-    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
-    - {fileID: 5950270917255607932, guid: 5fe68198f7dd3bf4a84b5809816e3d46, type: 3}
-    value: 15
-    timeBtwSpawns: {x: 1, y: 4}
-    startDelay: 10
+    timeBtwSpawns: {x: 5, y: 8}
+    startDelay: 4
   - enemies:
     - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
-    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
-    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
-    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
+    - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
+    - {fileID: 625804847634395182, guid: d49763f499bb8544f8aed958149f821c, type: 3}
     - {fileID: 5950270917255607932, guid: 5fe68198f7dd3bf4a84b5809816e3d46, type: 3}
+    value: 35
+    timeBtwSpawns: {x: 4, y: 5}
+    startDelay: 2
+  - enemies:
     - {fileID: 5950270917255607932, guid: 5fe68198f7dd3bf4a84b5809816e3d46, type: 3}
-    value: 30
-    timeBtwSpawns: {x: 2, y: 6}
-    startDelay: 10
+    - {fileID: 6568799277549759588, guid: 1c751b82e6660f845822f9b7f659e275, type: 3}
+    - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
+    value: 45
+    timeBtwSpawns: {x: 3, y: 4}
+    startDelay: 2
   - enemies:
     - {fileID: 5823013461923965716, guid: a2f08739e30182b45a21573741e7f7ee, type: 3}
     - {fileID: 625804847634395182, guid: d49763f499bb8544f8aed958149f821c, type: 3}
     - {fileID: 2430708233658195450, guid: 89d8f4c0f26ee6a43935f5aad5602970, type: 3}
     - {fileID: 6568799277549759588, guid: 1c751b82e6660f845822f9b7f659e275, type: 3}
     - {fileID: 5950270917255607932, guid: 5fe68198f7dd3bf4a84b5809816e3d46, type: 3}
-    value: 50
-    timeBtwSpawns: {x: 1.5, y: 4}
-    startDelay: 10
+    value: 55
+    timeBtwSpawns: {x: 2, y: 3}
+    startDelay: 1
   - enemies:
     - {fileID: 4158770303672267350, guid: 92bee4303736830429b11f78facc15f3, type: 3}
     value: 1
     timeBtwSpawns: {x: 0, y: 0}
-    startDelay: 15
+    startDelay: 3

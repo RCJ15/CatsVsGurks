@@ -86,7 +86,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.07
+    widthMultiplier: 0.045
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -196,16 +196,22 @@ MonoBehaviour:
     m_Bits: 160
   hitLayer:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 256
   maxDistance: 1000
   rightHand: {fileID: 0}
   leftHand: {fileID: 0}
   confirmRightButton: 201326592
   confirmLeftButton: 805306368
+  restartButton: 768
   attractionRange: 12.5
   forcedAttractionRange: 2.5
   timeUntilAttracted: 0.15
   attractionDuration: 5
+  lasers:
+  - {fileID: 7036570839535466035}
+  - {fileID: 4397889170294233211}
+  - {fileID: 2593282486731577464}
+  - {fileID: 2971258789956757802}
 --- !u!1 &3103597421705499449
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +298,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.07
+    widthMultiplier: 0.045
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -434,7 +440,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.07
+    widthMultiplier: 0.045
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -576,7 +582,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.07
+    widthMultiplier: 0.045
     widthCurve:
       serializedVersion: 2
       m_Curve:

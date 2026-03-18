@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System;
+using TMPro;
 using UnityEngine;
 
 public class TowerShop : MonoBehaviour
@@ -10,6 +12,8 @@ public class TowerShop : MonoBehaviour
     private bool _open;
     [SerializeField] private float rotationDelta;
 
+    [SerializeField] private TMP_Text moneyText;
+    private string _moneyTextFormat;
     [SerializeField] private OVRInput.RawButton toggleShopInput;
 
     private BuyTowerButton[] _buttons;
@@ -26,6 +30,21 @@ public class TowerShop : MonoBehaviour
         _text = FindAnyObjectByType<TutorialText>();
     }
 
+    private void OnDestroy()
+    {
+        Player.OnChangeMoney -= OnChangeMoney;
+    }
+
+    private void OnChangeMoney(int oldValue, int newValue)
+    {
+        UpdateMoneyText();
+    }
+
+    private void UpdateMoneyText()
+    {
+        moneyText.text = string.Format(_moneyTextFormat, Player.Money);
+    }
+
     private void Start()
     {
         _laserPointer = LaserPointer.Instance;
@@ -35,6 +54,13 @@ public class TowerShop : MonoBehaviour
         {
             button.Toggle(false, true);
         }
+
+        _moneyTextFormat = moneyText.text;
+        UpdateMoneyText();
+
+        Player.OnChangeMoney += OnChangeMoney;
+
+        moneyText.transform.localScale = Vector3.zero;
     }
 
     private void Update()
@@ -70,5 +96,8 @@ public class TowerShop : MonoBehaviour
         {
             button.Toggle(_open);
         }
+
+        moneyText.transform.DOKill();
+        moneyText.transform.DOScale(_open ? 1 : 0, 0.5f).SetEase(Ease.InOutSine);
     }
 }

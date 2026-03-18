@@ -20,9 +20,16 @@ public class Menu : MonoBehaviour
         isOpen = false;
         panel.SetActive(false);
         //source = GetComponent<AudioSource>();
+
+        gameObject.SetActive(false);
     }
     public void OpenCloseMenu()
     {
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
+
         if (isOpen)
         {
             isOpen = false;
@@ -30,7 +37,7 @@ public class Menu : MonoBehaviour
             //source.PlayOneShot(closeMenu, 0.75f);
             Debug.Log("Closing MENU");
 
-            Time.timeScale = 1.0f;
+            //Time.timeScale = 1.0f;
         }
         else
         {
@@ -63,7 +70,7 @@ public class Menu : MonoBehaviour
 
             isOpen = true;
             //source.PlayOneShot(openMenu, 0.3f);
-            Time.timeScale = 0.0f;
+            //Time.timeScale = 0.0f;
         }
     }
     IEnumerator AnimateMenu(Vector3 targetPosition, Quaternion targetRotation)

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dbb470bf8eda84f93e9ddb694f38ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransformVisuals
+  dontModifyParticles: 0
 --- !u!1 &2370955264248728614
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
   col: {fileID: 9022308312882377037}
   friendlyFire: 0
-  knockbackForce: 12
+  knockbackForce: 6
   startOffset: {x: 0, y: 0.7, z: 0}
   projectile: {fileID: 6218270877905568275}
   visuals: {fileID: 974999470794383618}
@@ -156,6 +157,7 @@ MonoBehaviour:
   minimumTravelTime: 1.35
   heightMultiplier: 0.25
   minimumHeight: 3
+  spawnOnDeath: {fileID: 0}
 --- !u!54 &1984245378368935044
 Rigidbody:
   m_ObjectHideFlags: 0

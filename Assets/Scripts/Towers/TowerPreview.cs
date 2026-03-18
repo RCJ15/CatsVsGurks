@@ -14,12 +14,16 @@ public class TowerPreview : MonoBehaviour
                 value.y = _simulationPlane.transform.position.y;
             }
 
+            value.x = Mathf.Clamp(value.x, -maxSize.x, maxSize.x);
+            value.z = Mathf.Clamp(value.z, -maxSize.y, maxSize.y);
+
             transform.position = value;
         }
     }
 
     private static readonly Collider[] _colliders = new Collider[1];
 
+    [SerializeField] private Vector2 maxSize;
     [SerializeField] private Vector2 size;
 
     private GlobalTowerSettings _globalTowerSettings;
@@ -81,6 +85,7 @@ public class TowerPreview : MonoBehaviour
         Gizmos.color = Valid ? Color.green : Color.red;
 
         Gizmos.DrawWireCube(transform.position, new(size.x, 10, size.y));
+        Gizmos.DrawWireCube(Vector3.zero, new(maxSize.x, 0, maxSize.y));
     }
 #endif
 }

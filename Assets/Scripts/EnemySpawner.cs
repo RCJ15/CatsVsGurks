@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private Vector2 min;
     [SerializeField] private Vector2 max;
+    [SerializeField] private OVRInput.RawButton forceNextWave;
     [SerializeField] private Wave[] waves;
 
     private Wave _currentWave;
@@ -28,17 +29,38 @@ public class EnemySpawner : MonoBehaviour
     {
         if (!_isPlaying)
         {
+#if UNITY_EDITOR
+            if (UnityEngine.InputSystem.Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                Begin();
+                return;
+            }
+#endif
             return;
         }
 
-        if (_currentValue <= 0)
+        bool forceNextWave = OVRInput.GetDown(this.forceNextWave)
+
+#if UNITY_EDITOR
+            || UnityEngine.InputSystem.Keyboard.current.lKey.wasPressedThisFrame
+#endif
+            ;
+
+        if (_currentValue <= 0 || forceNextWave)
         {
-            if (Gurk.GurksRemaining <= 0)
+            if (Gurk.GurksRemaining <= 0 || forceNextWave)
             {
                 // Start next wave
                 Debug.Log("WAVE COMPLETE");
 
                 _waveIndex++;
+
+                if (_waveIndex >= waves.Length)
+                {
+                    Debug.Log("GAME WON!!!");
+                    Destroy(gameObject);
+                    return;
+                }
                 StartWave(_waveIndex);
             }
             return;
@@ -56,6 +78,8 @@ public class EnemySpawner : MonoBehaviour
 
             // Spawn enemy
             Gurk newEnemy = Instantiate(enemy, pos, Quaternion.LookRotation(transform.position - pos, Vector3.up));
+
+            Debug.Log("Spawn enemy");
 
             _currentValue -= enemy.WaveWeight;
         }
@@ -95,6 +119,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void Begin()
     {
+        Debug.Log("BEGINNING GAME");
+
         _isPlaying = true;
         StartWave(0);
     }

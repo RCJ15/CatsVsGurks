@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7560092893817121649}
   - component: {fileID: 4894420475530893778}
-  - component: {fileID: 8670594733899795121}
   m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 5, z: 0.8}
+  m_LocalScale: {x: 1.33, y: 5, z: 1.33}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5445162284830750185}
@@ -40,7 +39,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3778348689773309070}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8c2805d85752e2a419971dd9eaabbabb, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -55,23 +54,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &8670594733899795121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3778348689773309070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96ecb098162ae7942933028de1b13144, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PathfindingObstacle
-  type: 1
-  size: {x: 1, y: 1}
-  radius: 0.5
-  block: 1
-  cost: 0
 --- !u!1 &4673270296210354003
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,10 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32231e747e7e8e440b41b962823fcdc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBase
-  extraSize: 0.15
-  hp: 1000
-  defense: 0
+  extraSize: 1.6
+  hp: 3000
+  defense: 15
   cost: 9999
+  loseSfx: {fileID: 8300000, guid: 243275b1076aea94ea92a7b2bf58e474, type: 3}
 --- !u!1 &9065260564577101786
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,15 +161,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -255,10 +238,40 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8920575663195161608}
   m_SourcePrefab: {fileID: 100100000, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
 --- !u!4 &7167209710711846673 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
   m_PrefabInstance: {fileID: 7277168558080577786}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7511120097000680875 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5aa4e176d10d6c84fb26048c60ed963f, type: 3}
+  m_PrefabInstance: {fileID: 7277168558080577786}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8920575663195161608
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7511120097000680875}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 23b42a7570bb42243a2a475134d53218, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

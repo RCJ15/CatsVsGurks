@@ -9,9 +9,24 @@ public class PlayerBase : Tower
         base.Awake();
 
         Instance = this;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
 
         Player.MaxHP = MaxHP;
         Player.HP = HP;
+    }
+
+    private void Update()
+    {
+        if (VisualsPlane.Instance != null && !VisualsPlane.Instance.FieldPlaced)
+        {
+            Vector3 dir = HeadPosition.Pos - transform.position;
+            dir.y = 0;
+            transform.forward = dir;
+        }
     }
 
     public override void Hurt(float damage, Entity from)
@@ -28,6 +43,8 @@ public class PlayerBase : Tower
 
         Player.MaxHP = MaxHP;
         Player.HP = 0;
+
+        SfxPlayer.PlaySfx("CatLose", 1);
 
         // Death
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
