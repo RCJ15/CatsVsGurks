@@ -19,6 +19,8 @@ public class EnemySpawner : MonoBehaviour
     private bool _isPlaying;
     private int _waveIndex;
 
+    private bool _playHornSfx;
+
     private void Start()
     {
         // TEMP
@@ -68,6 +70,12 @@ public class EnemySpawner : MonoBehaviour
 
         if (_spawnTimer <= 0)
         {
+            if (_playHornSfx)
+            {
+                SfxPlayer.PlaySfx("GurkHorn");
+                _playHornSfx = false;
+            }
+
             _spawnTimer = Random.Range(_currentWave.TimeBtwSpawns.x, _currentWave.TimeBtwSpawns.y);
 
             // Determine enemy to spawn
@@ -127,6 +135,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartWave(int wave)
     {
+        _playHornSfx = true;
+
         _waveIndex = wave;
 
         Debug.Log("STARTING WAVE " + wave);

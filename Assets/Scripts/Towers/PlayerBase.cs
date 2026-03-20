@@ -44,7 +44,7 @@ public class PlayerBase : Tower
         Player.MaxHP = MaxHP;
         Player.HP = 0;
 
-        SfxPlayer.PlaySfx("CatLose", 1);
+        SfxPlayer.PlaySfx("CatLose", 1, 1);
 
         // Death
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);

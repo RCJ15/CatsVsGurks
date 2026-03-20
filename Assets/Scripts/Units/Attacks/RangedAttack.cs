@@ -13,6 +13,10 @@ public class RangedAttack : UnitAttack
     [SerializeField] private float minimumHeight;
     [SerializeField] private GameObject spawnOnDeath;
 
+    [Space]
+    [SerializeField] private string[] spawnSfx;
+    [SerializeField] private string[] hitSfx;
+
     private float _distance;
     private float _t;
     private float _speed;
@@ -100,6 +104,11 @@ public class RangedAttack : UnitAttack
                 Destroy(obj, 10);
             }
 
+            foreach (var sfx in hitSfx)
+            {
+                SfxPlayer.PlaySfx(sfx, transform.position);
+            }
+
             visuals.gameObject.SetActive(false);
             return;
         }
@@ -132,6 +141,11 @@ public class RangedAttack : UnitAttack
             if (rb != null)
             {
                 _targetPos += rb.linearVelocity * _travelTime;
+            }
+
+            foreach (var sfx in spawnSfx)
+            {
+                SfxPlayer.PlaySfx(sfx, transform.position);
             }
         }
     }

@@ -87,6 +87,8 @@ public abstract class Unit : Entity
 
     [Space]
     [SerializeField] private string attackSfx;
+    [SerializeField] private Vector2 attackSfxPitch = new(0.8f, 1.2f);
+    [SerializeField] private string attackSfx2;
     [SerializeField] private string deathSfx;
 
     private PathfindingManager _manager;
@@ -376,7 +378,8 @@ public abstract class Unit : Entity
 
     protected virtual void Attack()
     {
-        SfxPlayer.PlaySfx(attackSfx);
+        SfxPlayer.PlaySfx(attackSfx, transform.position, 1, UnityEngine.Random.Range(attackSfxPitch.x, attackSfxPitch.y));
+        SfxPlayer.PlaySfx(attackSfx2, transform.position);
 
         _attackCooldown = attackDelay;
 
@@ -564,6 +567,8 @@ public abstract class Unit : Entity
     public override void Hurt(float damage, Entity from)
     {
         base.Hurt(damage, from);
+
+        SfxPlayer.PlaySfx("Hurt", transform.position, 0.6f);
 
         // Attack the unit that attacks this unit
         _entityTarget = from;

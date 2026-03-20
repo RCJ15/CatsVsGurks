@@ -45,6 +45,8 @@ public class BuyTowerButton : MonoBehaviour, IClickable
         _laserPointer.TowerPreview = Instantiate(towerPreview);
 
         _towerShop.SetOpen(false);
+
+        SfxPlayer.PlaySfx("Purchase");
     }
 
     public void OnSelect()

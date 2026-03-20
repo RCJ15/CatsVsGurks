@@ -22,7 +22,7 @@ public class Cat : Unit
 
         _laserPointer = LaserPointer.Instance;
 
-        SfxPlayer.PlaySfx("Meow3");
+        SfxPlayer.PlaySfx("Meow", transform.position);
     }
 
     protected override void Update()
@@ -50,7 +50,7 @@ public class Cat : Unit
                     _attractionDuration = _laserPointer.AttractionDuration;
                     _attracted = true;
 
-                    SfxPlayer.PlaySfx("Meow2");
+                    SfxPlayer.PlaySfx("Meow", transform.position);
                 }
             }
         }
@@ -75,7 +75,22 @@ public class Cat : Unit
     {
         base.Attack();
 
-        SfxPlayer.PlaySfx("Meow1");
+        // Angry meow
+        if (Random.Range(0, 2) == 0)
+        {
+            SfxPlayer.PlaySfx("AngryMeow", transform.position);
+        }
+        else
+        {
+            SfxPlayer.PlaySfx("Hiss", transform.position);
+        }
+    }
+
+    public override void Hurt(float damage, Entity from)
+    {
+        base.Hurt(damage, from);
+
+        SfxPlayer.PlaySfx("SadMeow", transform.position);
     }
 
     protected override void FoundEntityTarget()

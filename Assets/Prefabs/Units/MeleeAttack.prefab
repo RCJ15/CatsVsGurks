@@ -103,6 +103,9 @@ MonoBehaviour:
   friendlyFire: 0
   knockbackForce: 8
   colliderActiveTime: 0.15
+  hitSfx:
+  - SwordImpact
+  volume: 0.6
 --- !u!54 &5995348641778064227
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -113,8 +113,11 @@ MonoBehaviour:
   chaseRange: 10
   rb: {fileID: 3041714261448962438}
   walkParticles: {fileID: 4917521183482902834}
-  attackSfx: 
+  attackSfx: GurkGrunt
+  attackSfxPitch: {x: 0.03, y: 0.1}
+  attackSfx2: 
   deathSfx: GurkDeath
+  rawrPitch: {x: 0.1, y: 0.2}
   value: {x: 2000, y: 2500}
   waveWeight: 9999
   altAttack: {fileID: 5705618595326724187, guid: 2cab3f7575cefe8459c39b99a7566e89, type: 3}

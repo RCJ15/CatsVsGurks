@@ -9,6 +9,7 @@ public class Gurk : Unit
     public static int GurksRemaining { get; private set; }
 
     [Space]
+    [SerializeField] private Vector2 rawrPitch = new Vector2(0.8f, 1.2f);
     [SerializeField] protected Vector2Int value = new Vector2Int(50, 100);
     [SerializeField] private float waveWeight = 1;
 
@@ -43,6 +44,8 @@ public class Gurk : Unit
         base.Start();
 
         _playerBase = PlayerBase.Instance;
+
+        SfxPlayer.PlaySfx("GurkRawr", transform.position, 0.15f, Random.Range(rawrPitch.x, rawrPitch.y));
     }
 
     protected override Entity DetermineEntityTarget()

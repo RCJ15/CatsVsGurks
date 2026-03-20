@@ -158,6 +158,11 @@ MonoBehaviour:
   heightMultiplier: 0.25
   minimumHeight: 3
   spawnOnDeath: {fileID: 0}
+  spawnSfx:
+  - ArrowFire
+  - Swoosh
+  hitSfx:
+  - ArrowHit
 --- !u!54 &1984245378368935044
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -160,13 +160,17 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 7689457974584012898, guid: cfb0bc7f116f8684191e606a1b8ebf6a, type: 3}
-  damage: 15
+  damage: 20
   attackDelay: 2.1
   attackAnimSpeed: 1.2
   range: 1
   chaseRange: 10
   rb: {fileID: 7022258294078216870}
   walkParticles: {fileID: 4678515169381038376}
+  attackSfx: SteelImpact
+  attackSfxPitch: {x: 0.8, y: 1.2}
+  attackSfx2: 
+  deathSfx: 
   color: 1
 --- !u!54 &7022258294078216870
 Rigidbody:

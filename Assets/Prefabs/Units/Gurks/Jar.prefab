@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gurk
   extraSize: 2
-  hp: 35
+  hp: 20
   defense: 999
   knockbackResitance: 1
   unitName: Gurk Burk

@@ -3,6 +3,8 @@ using UnityEngine;
 public class MeleeAttack : UnitAttack
 {
     [SerializeField] private float colliderActiveTime;
+    [SerializeField] private string[] hitSfx;
+    [SerializeField] private float volume;
 
     private void Start()
     {
@@ -12,6 +14,8 @@ public class MeleeAttack : UnitAttack
         // Kinda goofy way of implementing this 
         User.SetAnimTrigger("Attack");
         User.OnAnimEvent += OnAnimEvent;
+
+        SfxPlayer.PlaySfx("Swoosh", transform.position);
     }
 
     private void Update()
@@ -34,6 +38,11 @@ public class MeleeAttack : UnitAttack
         if (name == "Attack")
         {
             EnableCollider();
+
+            foreach (var sfx in hitSfx)
+            {
+                SfxPlayer.PlaySfx(sfx, transform.position, volume);
+            }
 
             Invoke(nameof(DisableCollider), colliderActiveTime);
         }

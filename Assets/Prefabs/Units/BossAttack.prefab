@@ -103,6 +103,12 @@ MonoBehaviour:
   friendlyFire: 0
   knockbackForce: 8
   colliderActiveTime: 0.15
+  hitSfx:
+  - SwordImpact
+  - Explode
+  - Steel
+  - Glass
+  volume: 1
 --- !u!54 &5603139125106001318
 Rigidbody:
   m_ObjectHideFlags: 0

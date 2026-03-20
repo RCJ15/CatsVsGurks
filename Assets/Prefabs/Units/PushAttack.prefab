@@ -103,6 +103,8 @@ MonoBehaviour:
   friendlyFire: 0
   knockbackForce: 16.5
   colliderActiveTime: 0.15
+  hitSfx:
+  - SteelImpact
 --- !u!54 &7200882802739064076
 Rigidbody:
   m_ObjectHideFlags: 0

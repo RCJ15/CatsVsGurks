@@ -143,6 +143,8 @@ public class LaserPointer : MonoBehaviour
         {
             if (OVRInput.GetDown(button))
             {
+                SfxPlayer.PlaySfx("Click");
+
                 if (TowerPreview.Valid)
                 {
                     // Place tower
