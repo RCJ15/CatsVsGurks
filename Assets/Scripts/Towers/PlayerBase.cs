@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBase : Tower
@@ -33,6 +34,8 @@ public class PlayerBase : Tower
     {
         base.Hurt(damage, from);
 
+        StartCoroutine(Vibrate(0.5f, 1f, 0.2f));
+
         Player.MaxHP = MaxHP;
         Player.HP = HP;
     }
@@ -48,5 +51,12 @@ public class PlayerBase : Tower
 
         // Death
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    IEnumerator Vibrate(float frequency, float amplitude, float duration)
+    {
+        OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.RTouch);
+        yield return new WaitForSecondsRealtime(duration);
+        OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -59,5 +60,16 @@ public class Barrack : Tower
     private void OnCatDie()
     {
         _catsSpawned--;
+    }
+    public override void Hurt(float Damage, Entity from)
+    {
+        StartCoroutine(Vibrate(0.5f, 0.2f, 0.2f));
+        base.Hurt(Damage, from);
+    }
+    IEnumerator Vibrate(float frequency, float amplitude, float duration)
+    {
+        OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.RTouch);
+        yield return new WaitForSecondsRealtime(duration);
+        OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
     }
 }
