@@ -139,12 +139,15 @@ public class LaserPointer : MonoBehaviour
         // PRESS
         OVRInput.RawButton button = LeftHanded ? confirmLeftButton : confirmRightButton;
 
+        if (OVRInput.GetDown(button))
+        {
+            SfxPlayer.PlaySfx("Click");
+        }
+
         if (TowerPreview != null)
         {
             if (OVRInput.GetDown(button))
             {
-                SfxPlayer.PlaySfx("Click");
-
                 if (TowerPreview.Valid)
                 {
                     // Place tower

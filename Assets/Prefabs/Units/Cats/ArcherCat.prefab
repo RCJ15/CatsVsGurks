@@ -167,7 +167,12 @@ MonoBehaviour:
   chaseRange: 25
   rb: {fileID: 229471394842948529}
   walkParticles: {fileID: 5771831789761720154}
+  attackSfx: 
+  attackSfxPitch: {x: 0.8, y: 1.2}
+  attackSfx2: 
+  deathSfx: 
   color: 2
+  continouslyFollowLaser: 1
 --- !u!54 &229471394842948529
 Rigidbody:
   m_ObjectHideFlags: 0

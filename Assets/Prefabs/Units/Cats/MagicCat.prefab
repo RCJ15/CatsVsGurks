@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 85
+  hp: 100
   defense: 5
   knockbackResitance: 0
   unitName: Magic Cat
@@ -257,14 +257,19 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2889662702771563516, guid: 3b2294b287354d14aa17eff3a585cd3c, type: 3}
-  damage: 25
+  damage: 35
   attackDelay: 1.8
   attackAnimSpeed: 1.55
   range: 7.5
   chaseRange: 20
   rb: {fileID: 1582546187264139112}
   walkParticles: {fileID: 3737265296382108293}
+  attackSfx: 
+  attackSfxPitch: {x: 0.8, y: 1.2}
+  attackSfx2: 
+  deathSfx: 
   color: 3
+  continouslyFollowLaser: 1
 --- !u!54 &1582546187264139112
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -351,7 +351,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 648512773365055778}
   catToSpawn: {fileID: 7603198658870231697, guid: 1234f856aaae7684baddcfc676969e40, type: 3}
   catLimit: 4
-  timeBtwSpawns: 20
+  timeBtwSpawns: 15
   firstSpawnTimer: 3
   visual: {fileID: 6024478578452385670}
   timer: {fileID: 3700069398815392290}

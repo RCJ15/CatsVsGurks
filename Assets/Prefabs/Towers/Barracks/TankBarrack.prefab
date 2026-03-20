@@ -245,11 +245,11 @@ MonoBehaviour:
   extraSize: 2.3
   hp: 500
   defense: 10
-  cost: 600
+  cost: 650
   spawnPoint: {fileID: 3379871255403132490}
   catToSpawn: {fileID: 3234281946136024491, guid: 398022782ae78324994e85ffee4453cb, type: 3}
   catLimit: 3
-  timeBtwSpawns: 25
+  timeBtwSpawns: 35
   firstSpawnTimer: 5
   visual: {fileID: 3156727622217322635}
   timer: {fileID: 5407844409819061551}

@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraSize: 0.3
-  hp: 110
+  hp: 125
   defense: 0
   knockbackResitance: 0
   unitName: Warrior Cat
@@ -150,7 +150,6 @@ MonoBehaviour:
   timeToAccelerate: 0.1
   timeToDecelerate: 0.05
   attack: {fileID: 2292268702327103537, guid: c105c5c08ffe5a84294237e9c8775080, type: 3}
-  attackSfx: sword
   damage: 45
   attackDelay: 0.9
   attackAnimSpeed: 2.4
@@ -158,7 +157,12 @@ MonoBehaviour:
   chaseRange: 10
   rb: {fileID: 2354061441159466880}
   walkParticles: {fileID: 1515324228855876032}
+  attackSfx: sword
+  attackSfxPitch: {x: 0.8, y: 1.2}
+  attackSfx2: 
+  deathSfx: 
   color: 0
+  continouslyFollowLaser: 0
 --- !u!54 &2354061441159466880
 Rigidbody:
   m_ObjectHideFlags: 0

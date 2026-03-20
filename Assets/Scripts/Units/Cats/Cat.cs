@@ -6,6 +6,7 @@ public class Cat : Unit
 
     [Space]
     [SerializeField] private LaserPointer.Color color = LaserPointer.Color.Red;
+    [SerializeField] private bool continouslyFollowLaser;
 
     public bool MatchingColor => HiveMQSubscriber.Instance == null || !HiveMQSubscriber.Instance.Connected || color == LaserPointer.CurrentColor;
 
@@ -102,7 +103,13 @@ public class Cat : Unit
 
     protected override Vector3? DetermineTargetPos()
     {
-        if (_attractionDuration > 0 && _laserPointer.TowerPreview == null && !TowerShop.Open && MatchingColor)
+        if (
+            ((continouslyFollowLaser && _attractionDuration > 0) 
+            ||
+            (!continouslyFollowLaser && _entityTarget == null && _attractionDuration > 0))
+            &&
+            _laserPointer.TowerPreview == null && !TowerShop.Open && MatchingColor
+            )
         {
             return LaserPointer.Point;
         }

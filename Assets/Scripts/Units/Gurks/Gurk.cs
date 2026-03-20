@@ -45,7 +45,7 @@ public class Gurk : Unit
 
         _playerBase = PlayerBase.Instance;
 
-        SfxPlayer.PlaySfx("GurkRawr", transform.position, 0.15f, Random.Range(rawrPitch.x, rawrPitch.y));
+        SfxPlayer.PlaySfx("GurkRawr", transform.position, 0.5f, Random.Range(rawrPitch.x, rawrPitch.y));
     }
 
     protected override Entity DetermineEntityTarget()
