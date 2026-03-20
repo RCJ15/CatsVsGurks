@@ -18,6 +18,8 @@ public class TutorialText : MonoBehaviour
 
     public IEnumerator Spawn()
     {
+        StartCoroutine(Vibrate(0.5f, 0.5f, 0.5f));
+
         Debug.Log("hej spawn");
 
         if (currentTextIndex == 1)
@@ -84,5 +86,11 @@ public class TutorialText : MonoBehaviour
 
         transform.position = targetPosition;
         transform.rotation = targetRotation;
+    }
+    IEnumerator Vibrate(float frequency, float amplitude, float duration)
+    {
+        OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.RTouch);
+        yield return new WaitForSecondsRealtime(duration);
+        OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.RTouch);
     }
 }
